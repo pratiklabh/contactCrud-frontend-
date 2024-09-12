@@ -18,7 +18,7 @@
       <Column header="Action">
         <template #body="slotProps">
           <!-- Button to open the edit dialog for a contact -->
-          <Button @click="openEditDialog(slotProps.data)" > Edit </Button>
+          <Button @click="openEditDialog(slotProps.data)">Edit</Button>
 
           <!-- Button to delete a contact -->
           <Button @click="deleteContact(slotProps.data.id)">Delete</Button>
@@ -26,33 +26,32 @@
       </Column>
     </DataTable>
 
-    <!-- Edit Dialog -->
-    <div v-if="showEditDialog" class="dialog-overlay">
-      <div class="dialog-content">
-        <h3>Edit Contact</h3>
-        <!-- Form to update contact details -->
-        <form @submit.prevent="updateContact">
-          <label>Name:</label>
-          <InputText v-model="editedContact.name" required />
-
-          <label>Email:</label>
-          <InputText v-model="editedContact.email" required />
-
-          <label>Subject:</label>
-          <InputText v-model="editedContact.subject" required />
-
-          <label>Message:</label>
-          <textarea v-model="editedContact.message" required></textarea>
-
-          <!-- Button to submit the form and update the contact -->
-          <Button type="submit">Update</Button>
-
-          <!-- Button to close the dialog without making changes -->
-          <Button @click="closeEditDialog">Cancel</Button>
-        </form>
-        <div v-if="updateSuccess" class="success-message">{{ updateSuccess }}</div>
+    <!-- Edit Dialog using PrimeVue Dialog component -->
+    <Dialog v-model:visible="showEditDialog" header="Edit Contact" :style="{ width: '25rem' }">
+      <span class="text-surface-500 dark:text-surface-400 block mb-4">Update contact information.</span>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="name" class="font-semibold w-24">Name</label>
+        <InputText id="name" v-model="editedContact.name" class="flex-auto ml-2" autocomplete="off" required />
       </div>
-    </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="email" class="font-semibold w-24">Email</label>
+        <InputText id="email" v-model="editedContact.email" class="flex-auto ml-2" autocomplete="off" required />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="subject" class="font-semibold w-24">Subject</label>
+        <InputText id="subject" v-model="editedContact.subject" class="flex-auto ml-2" autocomplete="off" required />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="message" class="font-semibold w-24">Message</label>
+        <textarea id="message" v-model="editedContact.message" class="flex-auto" required></textarea>
+      </div>
+      <div class="flex justify-end gap-2">
+        <Button type="button" label="Cancel" severity="secondary" @click="closeEditDialog"></Button>
+        <Button type="button" label="Save" @click="updateContact"></Button>
+      </div>
+    </Dialog>
+
+    <div v-if="updateSuccess" class="success-message">{{ updateSuccess }}</div>
   </div>
 </template>
 
@@ -63,6 +62,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+import Dialog from 'primevue/dialog';
 
 interface Contact {
   id: number;
@@ -128,49 +128,6 @@ const deleteContact = async (id: number) => {
 </script>
 
 <style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-button {
-  margin: 0 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dialog-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-}
-
-.dialog-content form {
-  display: flex;
-  flex-direction: column;
-}
-
-
-.dialog-content input,
-.dialog-content textarea {
-  margin-bottom: 10px;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
 
 
 </style>
