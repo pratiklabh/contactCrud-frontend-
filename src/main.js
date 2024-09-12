@@ -1,9 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
-import './assets/global.css';
-import 'primeicons/primeicons.css';
-import Aura from '@primevue/themes/aura';
 
 import Router from "./Router/router.js";
 
@@ -13,11 +10,8 @@ const app = createApp(App);
 
 app.use(Router);
 
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura
-    }
-});
+app.use(PrimeVue);
+
 
 // Register components globally
 app.component('Menubar', Menubar);

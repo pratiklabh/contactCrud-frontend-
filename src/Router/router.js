@@ -1,24 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-const Home = () => import('../Views/Home.vue');
-const AboutMe = () => import('../Views/AboutMe.vue');
-const Projects = () => import('../Views/Projects.vue');
-const Skills = () => import('../Views/Skills.vue');
-const Experience = () => import('../Views/Experience.vue');
-const ContactMe = () => import('../Views/ContactMe.vue');
-
-const routes = [
-    { path: '/', component: Home },
-    { path: '/about-me', component: AboutMe },
-    { path: '/projects', component: Projects },
-    { path: '/skills', component: Skills },
-    { path: '/experience', component: Experience },
-    { path: '/contact-me', component: ContactMe },
-];
+const ContactMe = () => import('../views/ContactMe.vue');
+const ContactList = () => import('../views/ContactList.vue');
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: [
+        {
+            path: '/',
+            name: 'contactMe', // Adding a name for ContactMe route (optional)
+            component: ContactMe,
+        },
+        {
+            path: '/contactList',
+            name: 'contactList', // Adding the missing name property
+            component: ContactList,
+        },
+    ],
+})
 
 export default router;
