@@ -158,18 +158,11 @@ button {
   width: 300px;
 }
 
-.dialog-content h3 {
-  margin-top: 0;
-}
-
 .dialog-content form {
   display: flex;
   flex-direction: column;
 }
 
-.dialog-content label {
-  margin: 5px 0 2px;
-}
 
 .dialog-content input,
 .dialog-content textarea {
@@ -179,7 +172,5 @@ button {
   border-radius: 4px;
 }
 
-.dialog-content button {
-  margin: 5px 0;
-}
+
 </style>
