@@ -68,7 +68,8 @@ const formErrors = reactive({
 
 // Yup schema for form validation
 const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
+  name: yup.string().min('2').required('Name is required')
+                    .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
   email: yup.string().email('Invalid email format').required('Email is required'),
   subject: yup.string().required('Subject is required'),
   message: yup.string().required('Message is required'),
