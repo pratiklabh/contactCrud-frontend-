@@ -18,7 +18,7 @@
       <Column header="Action">
         <template #body="slotProps">
           <!-- Button to open the edit dialog for a contact -->
-          <Button @click="openEditDialog(slotProps.data)">Edit</Button>
+          <Button @click="openEditDialog(slotProps.data)" class="mr-3">Edit</Button>
 
           <!-- Button to delete a contact -->
           <Button @click="deleteContact(slotProps.data.id)">Delete</Button>
@@ -45,7 +45,7 @@
         <label for="message" class="font-semibold w-24">Message</label>
         <textarea id="message" v-model="editedContact.message" class="flex-auto" required></textarea>
       </div>
-      <div class="flex justify-end gap-2">
+      <div class="flex justify-content-center gap-3">
         <Button type="button" label="Cancel" severity="secondary"
                 @click="closeEditDialog"></Button>
         <Button type="button" label="Save" @click="updateContact"></Button>
