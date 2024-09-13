@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, watch } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import * as yup from 'yup'
@@ -74,6 +74,25 @@ const schema = yup.object().shape({
   message: yup.string().required('Message is required'),
 })
 
+// Function to validate individual fields
+const validateField = async (field: keyof typeof formData) => {
+  try {
+    await schema.validateAt(field, formData)
+    formErrors[field] = ''
+  } catch (err) {
+    if (err instanceof yup.ValidationError) {
+      formErrors[field] = err.message
+    }
+  }
+}
+
+// Watchers for individual fields
+watch(() => formData.name, () => validateField('name'))
+watch(() => formData.email, () => validateField('email'))
+watch(() => formData.subject, () => validateField('subject'))
+watch(() => formData.message, () => validateField('message'))
+
+// Function to validate the entire form
 const validateForm = async () => {
   try {
     // Resetting form errors before validation
@@ -93,6 +112,7 @@ const validateForm = async () => {
   }
 }
 
+// Form submission handler
 const handleSubmit = async () => {
   const isValid = await validateForm()
   if (isValid) {
@@ -120,6 +140,8 @@ const navigateToViewContact = () => {
   router.push({ name: 'contactList' })
 }
 </script>
+
+
 
 <style scoped>
 .contact-me {
