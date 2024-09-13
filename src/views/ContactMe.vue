@@ -169,7 +169,6 @@ const navigateToViewContact = () => {
 }
 
 button {
-  background-color: #f0f0f0;
   font-size: 1.5rem;
   padding: 0.6rem 1.25rem;
   border-radius: 0.25rem;

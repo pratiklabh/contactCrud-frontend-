@@ -46,7 +46,8 @@
         <textarea id="message" v-model="editedContact.message" class="flex-auto" required></textarea>
       </div>
       <div class="flex justify-end gap-2">
-        <Button type="button" label="Cancel" severity="secondary" @click="closeEditDialog"></Button>
+        <Button type="button" label="Cancel" severity="secondary"
+                @click="closeEditDialog"></Button>
         <Button type="button" label="Save" @click="updateContact"></Button>
       </div>
     </Dialog>
