@@ -7,46 +7,46 @@
     <Form @submit="handleSubmit" v-slot="{ errors }" class="contact-form">
       <div class="form-group">
         <label for="name">Name</label>
-        <Field name="name" v-slot="{ field, errorMessage }">
+        <Field name="name" rules="required|min:2" v-slot="{ field, errorMessage }">
           <InputText
               id="name"
               v-bind="field"
               v-model="formData.name"
               placeholder="Your Name"
           />
-          <ErrorMessage :name="field.name" class="error"/>
+          <ErrorMessage name="name" class="error" />
         </Field>
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <Field name="email" v-slot="{ field, errorMessage }">
+        <Field name="email" rules="required|email" v-slot="{ field, errorMessage }">
           <InputText
               id="email"
               v-bind="field"
               v-model="formData.email"
               placeholder="Your Email"
           />
-          <ErrorMessage :name="field.name" class="error"/>
+          <ErrorMessage name="email" class="error" />
         </Field>
       </div>
 
       <div class="form-group">
         <label for="subject">Subject</label>
-        <Field name="subject" v-slot="{ field, errorMessage }">
+        <Field name="subject" rules="required|min:3" v-slot="{ field, errorMessage }">
           <InputText
               id="subject"
               v-bind="field"
               v-model="formData.subject"
               placeholder="Subject"
           />
-          <ErrorMessage :name="field.name" class="error"/>
+          <ErrorMessage name="subject" class="error" />
         </Field>
       </div>
 
       <div class="form-group">
         <label for="message">Message</label>
-        <Field name="message" v-slot="{ field, errorMessage }">
+        <Field name="message" rules="required|min:10" v-slot="{ field, errorMessage }">
           <InputText
               id="message"
               v-bind="field"
@@ -55,7 +55,7 @@
               type="textarea"
               rows="5"
           />
-          <ErrorMessage :name="field.name" class="error"/>
+          <ErrorMessage name="message" class="error" />
         </Field>
       </div>
 
@@ -72,40 +72,24 @@
 </template>
 
 <script lang="ts" setup>
-
-// reactive: A Vue 3 Composition API function that creates a reactive object,
-// allowing automatic updates when the object changes.
-import {reactive} from 'vue'
-
-// Form, Field, ErrorMessage: Components from vee-validate, a validation library for Vue.js,
-// used to validate form fields and display errors.
-import {Form, Field, ErrorMessage} from 'vee-validate'
-
+import { reactive } from 'vue'
+import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate'
+import { required, email, min } from '@vee-validate/rules'
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-
-// required, email, min: Validation rules from vee-validate that enforce mandatory fields,
-// valid email formats, and minimum input lengths.
-import {required, email, min} from '@vee-validate/rules'
-
-// defineRule: Registers the validation rules globally so they can be used in the form.
-import {defineRule, configure} from 'vee-validate'
-
-// to make HTTP requests
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
-// useRouter: Vue Router's useRouter function is used for programmatic navigation.
-import {useRouter} from 'vue-router'
-
-// defineRule registers the validation rules
-// (required, email, and min) with vee-validate for later use in the form fields.
+// Define and configure validation rules
 defineRule('required', required)
 defineRule('email', email)
 defineRule('min', min)
 
+configure({
+  validateOnInput: true
+})
+
 // Reactive form data
-// reactive object that holds the data for the form fields
-// Any changes made in the form inputs will automatically update this object.
 const formData = reactive({
   name: '',
   email: '',
@@ -113,24 +97,12 @@ const formData = reactive({
   message: '',
 })
 
-
-configure({
-
-  // ro ensure that form validation occurs as soon as the user types in the fields,
-  // rather than waiting until they submit the form.
-  validateOnInput: true
-})
-
-// handleSubmit is an asynchronous function triggered when the form is submitted.
+// Handle form submission
 const handleSubmit = async (values: typeof formData) => {
   try {
-    // Submitting form data to the backend
-    // It sends the form data to the server using axios.post to the /api/contacts endpoint.
     const response = await axios.post('/api/contacts', values)
     console.log('Response:', response.data)
     alert(`Thank you, ${values.name}! Your message has been sent.`)
-
-    // Resetting the form
     formData.name = ''
     formData.email = ''
     formData.subject = ''
@@ -142,15 +114,12 @@ const handleSubmit = async (values: typeof formData) => {
 }
 
 // Router for navigating to the contact list
-// useRouter is used to get access to Vue Router, allowing programmatic navigation.
 const router = useRouter()
-
-// navigates the user to the contactList route (presumably a page that lists contact information)
-// when the "View Contact" button is clicked.
 const navigateToViewContact = () => {
-  router.push({name: 'contactList'})
+  router.push({ name: 'contactList' })
 }
 </script>
+
 
 <style scoped>
 .contact-vee {
