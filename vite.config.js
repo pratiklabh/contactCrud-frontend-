@@ -10,7 +10,7 @@ import vueDevtools from 'vite-plugin-vue-devtools';
 export default defineConfig({
   plugins: [
     vue(),
-      vueDevtools(),
+    vueDevtools(),
   ],
   resolve: {
     alias: {
@@ -21,7 +21,7 @@ export default defineConfig({
     proxy: {
       // Proxy all requests starting with /api to your backend
       '/api': {
-        target: 'http://localhost:8080/ContactCRUD-final', // Your backend server URL
+        target: 'http://localhost:8080/ContactCRUD-final', // backend server URL
         changeOrigin: true, // Changes the origin of the host header to the target URL
       }
     }

@@ -7,57 +7,56 @@
     <Form @submit="handleSubmit" v-slot="{ errors }" class="contact-form">
       <div class="form-group">
         <label for="name">Name</label>
-        <Field
-            name="name"
-            as="input"
-            type="text"
-            id="name"
-            v-model="formData.name"
-            rules="required|min:3"
-            placeholder="Your Name"
-        />
-        <ErrorMessage name="name" class="error" />
+        <Field name="name" v-slot="{ field, errorMessage }">
+          <InputText
+              id="name"
+              v-bind="field"
+              v-model="formData.name"
+              placeholder="Your Name"
+          />
+          <ErrorMessage :name="field.name" class="error" />
+        </Field>
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <Field
-            name="email"
-            as="input"
-            type="email"
-            id="email"
-            v-model="formData.email"
-            rules="required|email"
-            placeholder="Your Email"
-        />
-        <ErrorMessage name="email" class="error" />
+        <Field name="email" v-slot="{ field, errorMessage }">
+          <InputText
+              id="email"
+              v-bind="field"
+              v-model="formData.email"
+              placeholder="Your Email"
+          />
+          <ErrorMessage :name="field.name" class="error" />
+        </Field>
       </div>
 
       <div class="form-group">
         <label for="subject">Subject</label>
-        <Field
-            name="subject"
-            as="input"
-            id="subject"
-            v-model="formData.subject"
-            rules="required|min:3"
-            placeholder="Subject"
-        />
-        <ErrorMessage name="subject" class="error" />
+        <Field name="subject" v-slot="{ field, errorMessage }">
+          <InputText
+              id="subject"
+              v-bind="field"
+              v-model="formData.subject"
+              placeholder="Subject"
+          />
+          <ErrorMessage :name="field.name" class="error" />
+        </Field>
       </div>
 
       <div class="form-group">
         <label for="message">Message</label>
-        <Field
-            name="message"
-            as="textarea"
-            id="message"
-            v-model="formData.message"
-            rules="required|min:10"
-            placeholder="Your Message"
-            rows="5"
-        />
-        <ErrorMessage name="message" class="error" />
+        <Field name="message" v-slot="{ field, errorMessage }">
+          <InputText
+              id="message"
+              v-bind="field"
+              v-model="formData.message"
+              placeholder="Your Message"
+              type="textarea"
+              rows="5"
+          />
+          <ErrorMessage :name="field.name" class="error" />
+        </Field>
       </div>
 
       <Button type="submit" class="view-contact-button">
@@ -75,6 +74,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { Form, Field, ErrorMessage } from 'vee-validate'
+import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 import { required, email, min } from '@vee-validate/rules'
 import { defineRule, configure } from 'vee-validate'
@@ -92,6 +92,10 @@ const formData = reactive({
   email: '',
   subject: '',
   message: '',
+})
+
+configure({
+  validateOnInput: true
 })
 
 // Form submission handler
