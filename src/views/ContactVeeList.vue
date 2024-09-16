@@ -26,31 +26,48 @@
       </Column>
     </DataTable>
 
-    <!-- Edit Dialog using PrimeVue Dialog component -->
+    <!-- Edit Dialog using PrimeVue Dialog component with vee-validate integration -->
     <Dialog v-model:visible="showEditDialog" header="Edit Contact" :style="{ width: '25rem' }">
       <span class="text-surface-500 dark:text-surface-400 block mb-4">Update contact information.</span>
-      <form @submit.prevent="updateContact">
+
+      <Form @submit="updateContact" v-slot="{ errors }">
         <div class="flex items-center gap-4 mb-4">
           <label for="name" class="font-semibold w-24">Name</label>
-          <InputText id="name" v-model="fields.name" class="flex-auto ml-2" autocomplete="off" />
+          <Field name="name" v-model="fields.name" rules="required">
+            <InputText id="name" v-model="fields.name" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="name" class="error" />
         </div>
+
         <div class="flex items-center gap-4 mb-4">
           <label for="email" class="font-semibold w-24">Email</label>
-          <InputText id="email" v-model="fields.email" class="flex-auto ml-2" autocomplete="off" />
+          <Field name="email" v-model="fields.email" rules="required|email">
+            <InputText id="email" v-model="fields.email" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="email" class="error" />
         </div>
+
         <div class="flex items-center gap-4 mb-4">
           <label for="subject" class="font-semibold w-24">Subject</label>
-          <InputText id="subject" v-model="fields.subject" class="flex-auto ml-2" autocomplete="off" />
+          <Field name="subject" v-model="fields.subject" rules="required">
+            <InputText id="subject" v-model="fields.subject" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="subject" class="error" />
         </div>
+
         <div class="flex items-center gap-4 mb-4">
           <label for="message" class="font-semibold w-24">Message</label>
-          <textarea id="message" v-model="fields.message" class="flex-auto"></textarea>
+          <Field name="message" v-model="fields.message" rules="required">
+            <textarea id="message" v-model="fields.message" class="flex-auto"></textarea>
+          </Field>
+          <ErrorMessage name="message" class="error" />
         </div>
+
         <div class="flex justify-content-center gap-3">
           <Button type="button" label="Cancel" severity="secondary" @click="closeEditDialog"></Button>
           <Button type="submit" label="Save"></Button>
         </div>
-      </form>
+      </Form>
     </Dialog>
 
     <div v-if="updateSuccess" class="success-message">{{ updateSuccess }}</div>
@@ -59,12 +76,19 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
+import { Form, Field, ErrorMessage } from 'vee-validate';
+import { required, email } from '@vee-validate/rules';
+import { defineRule } from 'vee-validate';
 import axios from 'axios';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Dialog from 'primevue/dialog';
+
+// Define validation rules
+defineRule('required', required);
+defineRule('email', email);
 
 interface Contact {
   id: number;
@@ -112,10 +136,10 @@ const updateContact = async () => {
         message: fields.value.message
       });
       contacts.value = contacts.value.map(contact =>
-          contact.id === editedContact.value!.id ? { ...editedContact.value, name: fields.value.name, email: fields.value.email, subject: fields.value.subject, message: fields.value.message } : contact
+          contact.id === editedContact.value!.id ? { ...editedContact.value, ...fields.value } : contact
       );
       updateSuccess.value = 'Contact updated successfully!';
-      closeEditDialog(); // Ensure dialog closes on successful update
+      closeEditDialog(); // Close dialog on success
     } catch (err) {
       error.value = 'Failed to update contact.';
     }
@@ -142,6 +166,7 @@ onMounted(async () => {
   }
 });
 </script>
+
 
 <style scoped>
 .error {
