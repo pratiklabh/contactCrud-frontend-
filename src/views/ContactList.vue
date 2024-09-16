@@ -60,8 +60,14 @@
 </template>
 
 <script lang="ts" setup>
+// ref creates reactive variables.
+// onMounted is a lifecycle hook that runs code when the component is mounted.
+// watch watches for changes to reactive data and triggers functions.
 import { ref, onMounted, watch } from 'vue';
+
+// for making HTTP requests
 import axios from 'axios';
+
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
@@ -76,13 +82,25 @@ interface Contact {
   subject: string;
   message: string;
 }
-
+// contacts: A reactive array to store the list of contacts fetched from the server.
 const contacts = ref<Contact[]>([]);
+
+// loading: A boolean that tracks whether the data is still loading.
 const loading = ref(true);
+
+// error: Holds an error message in case data fetching fails.
 const error = ref<string | null>(null);
+
+// showEditDialog: Boolean that controls the visibility of the edit contact dialog.
 const showEditDialog = ref(false);
+
+// editedContact: Stores the contact that is being edited in the dialog.
 const editedContact = ref<Contact | null>(null);
+
+// updateSuccess: Stores a success message when a contact is updated successfully.
 const updateSuccess = ref<string | null>(null);
+
+// formErrors: An object to store form validation errors for name, email, subject, and message.
 const formErrors = ref({
   name: '',
   email: '',
@@ -91,6 +109,7 @@ const formErrors = ref({
 });
 
 // Yup schema for validation
+// schema: Defines validation rules using yup for each form field.
 const schema = yup.object().shape({
   name: yup.string().min('2').required('Name is required')
       .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
@@ -99,19 +118,26 @@ const schema = yup.object().shape({
   message: yup.string().required('Message is required'),
 })
 
+// validateField: Validates a single field in the form using yup
 const validateField = async (field: keyof Contact) => {
   try {
     if (editedContact.value) {
       await schema.validateAt(field, editedContact.value);
+
+      // If validation passes, the error for that field is cleared.
       formErrors.value[field] = '';
     }
   } catch (err) {
     if (err instanceof yup.ValidationError) {
+
+      // If validation fails, the corresponding error message is set in formErrors.
       formErrors.value[field] = err.message;
     }
   }
 };
 
+
+// validateForm: Validates the entire form by checking all fields.
 const validateForm = async () => {
   try {
     // Resetting form errors before validation
@@ -135,44 +161,63 @@ const validateForm = async () => {
 };
 
 // Watchers for individual fields
+// Each field in editedContact is being watched for changes.
+// When a change occurs, the corresponding field is validated using validateField.
 watch(() => editedContact.value?.name, () => validateField('name'));
 watch(() => editedContact.value?.email, () => validateField('email'));
 watch(() => editedContact.value?.subject, () => validateField('subject'));
 watch(() => editedContact.value?.message, () => validateField('message'));
 
+
+// onMounted: Fetches the contact data from the API when the component is mounted
 onMounted(async () => {
   try {
     const response = await axios.get('/api/contacts');
+
+    //If successful, the contact data is stored in contacts.
     contacts.value = response.data.result;
   } catch (err) {
+
+    // If there's an error, the error variable is set.
     error.value = 'Failed to load contacts.';
   } finally {
+
+    // After the request, loading is set to false.
     loading.value = false;
   }
 });
 
+// openEditDialog: Opens the dialog to edit a contact.
+// It sets editedContact to the selected contact's data.
 const openEditDialog = (contact: Contact) => {
   editedContact.value = { ...contact };
   showEditDialog.value = true;
 };
 
+
+// closeEditDialog: Closes the edit dialog and resets the editedContact and success message.
 const closeEditDialog = () => {
   showEditDialog.value = false;
   editedContact.value = null;
   updateSuccess.value = null;
 };
 
+// updateContact: Updates the contact details if the form is valid.
 const updateContact = async () => {
   if (editedContact.value) {
     const isValid = await validateForm();
     if (isValid) {
       try {
+
+        // If successful, it updates the contact in the contacts array and displays a success message.
         await axios.put(`/api/contacts/${editedContact.value.id}`, editedContact.value);
         contacts.value = contacts.value.map(contact =>
             contact.id === editedContact.value!.id ? editedContact.value! : contact
         );
         updateSuccess.value = 'Contact updated successfully!';
       } catch (err) {
+
+        // If there's an error, it sets the error variable.
         error.value = 'Failed to update contact.';
       } finally {
         closeEditDialog();
@@ -181,11 +226,15 @@ const updateContact = async () => {
   }
 };
 
+// deleteContact: Deletes a contact by sending a DELETE request to the server.
 const deleteContact = async (id: number) => {
   try {
+
+    // If successful, it removes the contact from the contacts array.
     await axios.delete(`/api/contacts/${id}`);
     contacts.value = contacts.value.filter(contact => contact.id !== id);
   } catch (err) {
+    // If there's an error, it sets the error variable.
     error.value = 'Failed to delete contact.';
   }
 };

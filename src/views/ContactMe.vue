@@ -43,14 +43,25 @@
 </template>
 
 <script lang="ts" setup>
+//reactive: to create a reactive object that can store and track changes in form data and form errors.
+//watch: to observe changes in a specific property and execute a function when that property changes.
 import { reactive, watch } from 'vue'
+
+//to send HTTP requests
 import axios from 'axios'
+
+// allows programmatic navigation to other routes (e.g., navigating to the contact list page).
 import { useRouter } from 'vue-router'
+
+//a schema validation library used for validating form data
 import * as yup from 'yup'
+
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
 
 // Reactive form data
+//Creates a reactive object called formData to store the form’s input values
+//initially all fields are set empty
 const formData = reactive({
   name: '',
   email: '',
@@ -76,18 +87,25 @@ const schema = yup.object().shape({
 })
 
 // Function to validate individual fields
+//This function validates an individual form field (e.g., name, email) based on the Yup schema:
 const validateField = async (field: keyof typeof formData) => {
   try {
+    //validateAt method of Yup checks if the specific field passes validation.
     await schema.validateAt(field, formData)
+
+    //If valid, the error for that field is cleared.
     formErrors[field] = ''
   } catch (err) {
     if (err instanceof yup.ValidationError) {
+      //If invalid, an error message is stored in formErrors[field].
       formErrors[field] = err.message
     }
   }
 }
 
 // Watchers for individual fields
+// Watches for changes to formData.name.
+// When the name changes, it triggers the validateField function for the name field.(same for others)
 watch(() => formData.name, () => validateField('name'))
 watch(() => formData.email, () => validateField('email'))
 watch(() => formData.subject, () => validateField('subject'))
@@ -100,11 +118,14 @@ const validateForm = async () => {
     Object.keys(formErrors).forEach(key => (formErrors[key] = ''))
 
     // Validate form data against Yup schema
+    // The validate method of Yup checks the entire formData object against the schema.
     await schema.validate(formData, { abortEarly: false })
+    
     return true
   } catch (err) {
     // Set form errors for each field
     if (err instanceof yup.ValidationError) {
+      // If invalid, it updates formErrors for each invalid field with the corresponding error message and returns false.
       err.inner.forEach(validationError => {
         formErrors[validationError.path] = validationError.message
       })
@@ -113,8 +134,9 @@ const validateForm = async () => {
   }
 }
 
-// Form submission handler
+// Form submission handler that runs when the form is submitted
 const handleSubmit = async () => {
+  // It calls validateForm to ensure all fields are valid.
   const isValid = await validateForm()
   if (isValid) {
     try {
@@ -136,7 +158,10 @@ const handleSubmit = async () => {
 }
 
 // Router for navigating to the contact list
+// Initializes the router so you can programmatically navigate to different routes.
 const router = useRouter()
+// Defines a function that navigates to the contactList route when called
+// (i.e. when the "View Contact" button is clicked)
 const navigateToViewContact = () => {
   router.push({ name: 'contactList' })
 }
