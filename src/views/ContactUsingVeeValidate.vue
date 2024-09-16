@@ -72,24 +72,40 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate'
-import { required, email, min } from '@vee-validate/rules'
+
+// reactive: A Vue 3 Composition API function that creates a reactive object,
+// allowing automatic updates when the object changes.
+import {reactive} from 'vue'
+
+// Form, Field, ErrorMessage: Components from vee-validate, a validation library for Vue.js,
+// used to validate form fields and display errors.
+import {Form, Field, ErrorMessage} from 'vee-validate'
+
 import InputText from 'primevue/inputtext'
 import Button from 'primevue/button'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
 
-// Define and configure validation rules
+// required, email, min: Validation rules from vee-validate that enforce mandatory fields,
+// valid email formats, and minimum input lengths.
+import {required, email, min} from '@vee-validate/rules'
+
+// defineRule: Registers the validation rules globally so they can be used in the form.
+import {defineRule, configure} from 'vee-validate'
+
+// to make HTTP requests
+import axios from 'axios'
+
+// useRouter: Vue Router's useRouter function is used for programmatic navigation.
+import {useRouter} from 'vue-router'
+
+// defineRule registers the validation rules
+// (required, email, and min) with vee-validate for later use in the form fields.
 defineRule('required', required)
 defineRule('email', email)
 defineRule('min', min)
 
-configure({
-  validateOnInput: true
-})
-
 // Reactive form data
+// reactive object that holds the data for the form fields
+// Any changes made in the form inputs will automatically update this object.
 const formData = reactive({
   name: '',
   email: '',
@@ -97,12 +113,24 @@ const formData = reactive({
   message: '',
 })
 
-// Handle form submission
+
+configure({
+
+  // ro ensure that form validation occurs as soon as the user types in the fields,
+  // rather than waiting until they submit the form.
+  validateOnInput: true
+})
+
+// handleSubmit is an asynchronous function triggered when the form is submitted.
 const handleSubmit = async (values: typeof formData) => {
   try {
+    // Submitting form data to the backend
+    // It sends the form data to the server using axios.post to the /api/contacts endpoint.
     const response = await axios.post('/api/contacts', values)
     console.log('Response:', response.data)
     alert(`Thank you, ${values.name}! Your message has been sent.`)
+
+    // Resetting the form
     formData.name = ''
     formData.email = ''
     formData.subject = ''
@@ -114,9 +142,13 @@ const handleSubmit = async (values: typeof formData) => {
 }
 
 // Router for navigating to the contact list
+// useRouter is used to get access to Vue Router, allowing programmatic navigation.
 const router = useRouter()
+
+// navigates the user to the contactList route (presumably a page that lists contact information)
+// when the "View Contact" button is clicked.
 const navigateToViewContact = () => {
-  router.push({ name: 'contactList' })
+  router.push({name: 'contactList'})
 }
 </script>
 
