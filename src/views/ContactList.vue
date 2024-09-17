@@ -119,15 +119,24 @@ const schema = yup.object().shape({
 })
 
 // validateField: Validates a single field in the form using yup
+// This defines an async function named validateField
+// The type keyof Contact ensures that field must be
+// one of the keys of the Contact object (for example, name, email, etc.).
 const validateField = async (field: keyof Contact) => {
   try {
     if (editedContact.value) {
+      // The Yup validateAt method validates a specific field in the editedContact.
+      // value object according to the validation schema (schema).
+      // The await keyword ensures that the validation runs asynchronously
+      // and the function waits until the validation completes before continuing.
       await schema.validateAt(field, editedContact.value);
 
       // If validation passes, the error for that field is cleared.
       formErrors.value[field] = '';
     }
   } catch (err) {
+    // This checks whether the caught error is an instance of Yup’s ValidationError.
+    // If it is, the error is specifically related to form validation.
     if (err instanceof yup.ValidationError) {
 
       // If validation fails, the corresponding error message is set in formErrors.
@@ -138,21 +147,41 @@ const validateField = async (field: keyof Contact) => {
 
 
 // validateForm: Validates the entire form by checking all fields.
+// Defines an async function validateForm that validates the entire form data using Yup.
 const validateForm = async () => {
   try {
     // Resetting form errors before validation
+    // Before starting validation, this line clears all existing form errors
+    // by looping through each key (field name) in formErrors.
+    // value and resetting the value to an empty string.
+    // This ensures previous error messages are cleared before revalidation.
     Object.keys(formErrors.value).forEach(key => (formErrors.value[key] = ''));
 
     // Validate form data against Yup schema
     if (editedContact.value) {
+      // Uses Yup’s validate method to validate
+      // the entire editedContact.value object against the defined schema.
+      // { abortEarly: false } tells Yup to continue validating all fields even if one field fails.
+      // This ensures you catch all validation errors instead of stopping at the first one.
+
       await schema.validate(editedContact.value, { abortEarly: false });
+      // If the form data is valid, true is returned, indicating the form is valid.
+
       return true;
     }
     return false;
   } catch (err) {
     // Set form errors for each field
+    // This checks if the caught error is a Yup ValidationError.
+    // If it is, the error is specific to validation.
     if (err instanceof yup.ValidationError) {
+      // err.inner contains all the validation errors if abortEarly is set to false.
+      // This loop processes each individual validationError.
+      // validationError.path: Refers to the field name (path) where the validation failed.
+      // validationError.message: Holds the error message for that field.
       err.inner.forEach(validationError => {
+        // Sets the error message for each field in the formErrors object,
+        // making it available for displaying in the form’s UI.
         formErrors.value[validationError.path] = validationError.message;
       });
     }

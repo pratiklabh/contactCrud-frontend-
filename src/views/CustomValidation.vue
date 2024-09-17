@@ -37,6 +37,9 @@
       </div>
 
       <!-- Spouse Name Field -->
+      <!--      v-if="formData.maritalStatus === 'Married'":
+      This directive conditionally renders the Spouse Name field only if the maritalStatus is "Married".
+      If the user selects any other marital status, this field is not displayed.-->
       <div class="form-group" v-if="formData.maritalStatus === 'Married'">
         <label for="spouseName">Spouse Name</label>
         <Field name="spouseName" rules="required_if:maritalStatus,Married" v-slot="{ field, errorMessage }">
@@ -59,37 +62,61 @@
 </template>
 
 <script setup>
+// ref creates reactive references for individual values,
+// while reactive creates reactive objects for handling state.
 import { ref, reactive } from 'vue';
+
+// They help create forms, fields, display error messages,
+// define custom validation rules, and configure global validation settings.
 import { Form, Field, ErrorMessage, defineRule, configure } from 'vee-validate';
+
+// Validation rules from VeeValidate that ensure fields are filled (required)
+// and validate against minimum values (min).
 import { required, min } from '@vee-validate/rules';
+
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
-import Select from 'primevue/select'; // Updated import
+import Select from 'primevue/select';
 import axios from 'axios';
 
 // Register validation rules
+// Registers the required rule, making it available for validation.
 defineRule('required', required);
+
+// Registers the min rule,
+// allowing you to validate fields that must meet a minimum value or length.
 defineRule('min', min);
-defineRule('required_if', (value, [condition, compareValue]) => {
-  if (condition === 'Married' && compareValue === 'Married') {
-    return !!value;
+
+// Custom rule required_if is created.
+// It checks if another field (in this case, marital status) matches a specific value (Married).
+// If true, the field must be filled,
+// or an error message 'This field is required when married.' is shown.
+defineRule('required_if', (value, [compareField, compareValue], ctx) => {
+  if (ctx.form[compareField] === compareValue) {
+    return !!value || 'This field is required when married.';
   }
   return true;
 });
 
 // Configure VeeValidate
+// This function allows global configuration of VeeValidate behavior.
+// Here, it enables validation as users type, so feedback is immediate.
 configure({
-  validateOnInput: true,
+  validateOnInput: true, // Enables validation while typing
 });
 
 // Reactive form data
+// A reactive object holding form fields name, maritalStatus, and spouseName.
+// reactive allows changes to be automatically tracked and updated in the template.
 const formData = reactive({
   name: '',
   maritalStatus: '',
-  spouseName: 'null',
+  spouseName: '', // Ensure the initial value is an empty string
 });
 
 // Select options
+// Holds the options for the marital status dropdown (Single, Married, Divorced, and Widowed).
+// It's wrapped in ref to make the array reactive.
 const statusOptions = ref([
   { label: 'Single', value: 'Single' },
   { label: 'Married', value: 'Married' },
@@ -99,10 +126,28 @@ const statusOptions = ref([
 
 // Handle form submission
 const handleSubmit = async (values) => {
+  // Prepare the data to be sent, excluding 'spouseName' if the user is not married
+  // payload: An object is prepared containing name and maritalStatus.
+  // If the marital status is "Married",
+  // the spouseName field is also added to the payload.
+  const payload = {
+    name: formData.name,
+    maritalStatus: formData.maritalStatus,
+  };
+
+  // Only add spouseName if the marital status is "Married"
+  if (formData.maritalStatus === 'Married') {
+    // This is a logical OR (||) operation that checks if formData.spouseName has a value.
+    // If formData.spouseName is falsy (such as undefined, null, or an empty string),
+    // it assigns an empty string '' as a fallback.
+    payload.spouseName = formData.spouseName || '';
+  }
+
   try {
-    const response = await axios.post('/api/users', values);
+    const response = await axios.post('/api/users', payload);
     console.log('Response:', response.data);
     alert(`Thank you, ${values.name}! Your information has been submitted.`);
+
     // Reset form
     formData.name = '';
     formData.maritalStatus = '';
@@ -111,7 +156,8 @@ const handleSubmit = async (values) => {
     console.error('Error submitting form:', error);
     alert('An error occurred while submitting your information. Please try again.');
   }
-}
+};
+
 </script>
 
 <style scoped>
@@ -145,14 +191,6 @@ const handleSubmit = async (values) => {
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-}
-
-.form-group input,
-.form-group .p-select {
-  padding: 1rem;
-  border: 0.1rem solid #ddd;
-  border-radius: 0.25rem;
-  background: white;
 }
 
 .error {
