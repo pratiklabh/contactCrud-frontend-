@@ -108,19 +108,24 @@ import { reactive } from 'vue';
 import { Form } from 'vee-validate';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
+import axios from "axios";
 
 const formData = reactive({
   age: null,
   decimal: null,
   currency: null,
-  prefix: null,  // Ensure these fields are initialized as null
+  prefix: null,
   suffix: null,
   button: null,
 });
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
+  const response = axios.post('/api/numbers', formData)
+  console.log(response)
   console.log('Form data:', formData);
   console.log('Button:',formData.button);
+
+
   alert('Form submitted successfully!');
 };
 </script>
