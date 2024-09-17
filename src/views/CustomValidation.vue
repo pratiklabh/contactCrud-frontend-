@@ -140,11 +140,11 @@ const handleSubmit = async (values) => {
   };
 
   // Only add spouseName if the marital status is "Married"
-  if (formData.maritalStatus === 'Married') {
+  if (formData.maritalStatus === 'Married' && formData.spouseName) {
     // This is a logical OR (||) operation that checks if formData.spouseName has a value.
     // If formData.spouseName is falsy (such as undefined, null, or an empty string),
     // it assigns an empty string '' as a fallback.
-    payload.spouseName = formData.spouseName || '';
+    payload.spouseName = formData.spouseName;
   }
 
   try {
