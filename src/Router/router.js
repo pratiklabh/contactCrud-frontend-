@@ -6,6 +6,7 @@ const ContactVee = () => import('../views/ContactUsingVeeValidate.vue');
 const ContactVeeList = () => import('../views/ContactVeeList.vue');
 const CustomValidation = () => import('../views/CustomValidation.vue');
 const CustomValidationList = () => import('../views/CustomValidationList.vue');
+const Number = () => import('../views/Number.vue')
 
 
 const router = createRouter({
@@ -41,6 +42,11 @@ const router = createRouter({
             name: 'customValidationList',
             component: CustomValidationList,
         },
+        {
+            path: '/number',
+            name:'/number',
+            component: Number,
+        }
     ],
 })
 
