@@ -79,7 +79,7 @@ import Button from 'primevue/button';
 import Select from 'primevue/select';
 import axios from 'axios';
 
-// Register validation rules
+// defineRule: Register validation rules
 // Registers the required rule, making it available for validation.
 defineRule('required', required);
 
@@ -88,11 +88,15 @@ defineRule('required', required);
 defineRule('min', min);
 
 // Custom rule required_if is created.
-// It checks if another field (in this case, marital status) matches a specific value (Married).
-// If true, the field must be filled,
-// or an error message 'This field is required when married.' is shown.
+// value: The value of the field being validated (spouseName). This is the value being checked to see if it's required or not.
+// [compareField, compareValue]: An array containing two values passed to the rule:
+// compareField: The name of the field to compare (in this case, maritalStatus).
+// compareValue: The value to compare against (e.g., 'Married').
+// ctx: The context object, which contains information about the form and other fields.
+// This includes ctx.form, which gives access to the entire form's data.
 defineRule('required_if', (value, [compareField, compareValue], ctx) => {
   if (ctx.form[compareField] === compareValue) {
+    // !!value: This converts the value to a boolean (true if there is a value, false if it's empty or undefined).
     return !!value || 'This field is required when married.';
   }
   return true;
