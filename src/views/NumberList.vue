@@ -31,12 +31,44 @@
       <span class="text-surface-500 dark:text-surface-400 block mb-4">Update number information.</span>
 
       <Form @submit="updateNumber" v-slot="{ errors }">
-        <div v-for="field in fieldsList" :key="field.name" class="flex items-center gap-4 mb-4">
-          <label :for="field.name" class="font-semibold w-24">{{ field.label }}</label>
-          <Field :name="field.name" v-model="fields[field.name]" :rules="field.rules">
-            <InputText :id="field.name" v-model="fields[field.name]" class="flex-auto ml-2" />
+        <div class="flex items-center gap-4 mb-4">
+          <label for="age" class="font-semibold w-24">Age</label>
+          <Field name="age" v-model="fields.age" rules="required|numeric">
+            <InputText id="age" v-model="fields.age" class="flex-auto ml-2" />
           </Field>
-          <ErrorMessage :name="field.name" class="error" />
+          <ErrorMessage name="age" class="error" />
+        </div>
+
+        <div class="flex items-center gap-4 mb-4">
+          <label for="decimal" class="font-semibold w-24">Decimal</label>
+          <Field name="decimal" v-model="fields.decimal" rules="required|numeric">
+            <InputText id="decimal" v-model="fields.decimal" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="decimal" class="error" />
+        </div>
+
+        <div class="flex items-center gap-4 mb-4">
+          <label for="currency" class="font-semibold w-24">Currency</label>
+          <Field name="currency" v-model="fields.currency" rules="required">
+            <InputText id="currency" v-model="fields.currency" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="currency" class="error" />
+        </div>
+
+        <div class="flex items-center gap-4 mb-4">
+          <label for="prefix" class="font-semibold w-24">Prefix</label>
+          <Field name="prefix" v-model="fields.prefix" rules="required">
+            <InputText id="prefix" v-model="fields.prefix" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="prefix" class="error" />
+        </div>
+
+        <div class="flex items-center gap-4 mb-4">
+          <label for="suffix" class="font-semibold w-24">Suffix</label>
+          <Field name="suffix" v-model="fields.suffix" rules="required">
+            <InputText id="suffix" v-model="fields.suffix" class="flex-auto ml-2" />
+          </Field>
+          <ErrorMessage name="suffix" class="error" />
         </div>
 
         <div class="flex justify-content-center gap-3">
@@ -91,21 +123,14 @@ const fields = ref({
   suffix: ''
 });
 
-// List of form fields with their properties
-const fieldsList = [
-  { name: 'age', label: 'Age', rules: 'required|numeric' },
-  { name: 'decimal', label: 'Decimal', rules: 'required|numeric' },
-  { name: 'currency', label: 'Currency', rules: 'required' },
-  { name: 'prefix', label: 'Prefix', rules: 'required' },
-  { name: 'suffix', label: 'Suffix', rules: 'required' }
-];
-
 // Function to open the edit dialog
 const openEditDialog = (number: NumberItem) => {
   editedNumber.value = { ...number };
-  for (const field of fieldsList) {
-    fields.value[field.name] = number[field.name].toString();
-  }
+  fields.value.age = number.age.toString();
+  fields.value.decimal = number.decimal.toString();
+  fields.value.currency = number.currency;
+  fields.value.prefix = number.prefix;
+  fields.value.suffix = number.suffix;
   showEditDialog.value = true;
 };
 
@@ -119,7 +144,7 @@ const closeEditDialog = () => {
 const updateNumber = async () => {
   if (editedNumber.value) {
     try {
-      await axios.put(`/api/numbers/${editedNumber.value.id}`, fields.value);
+      await axios.put(/api/numbers/${editedNumber.value.id}, fields.value);
       numbers.value = numbers.value.map(number =>
           number.id === editedNumber.value!.id ? { ...editedNumber.value, ...fields.value } : number
       );
@@ -134,7 +159,7 @@ const updateNumber = async () => {
 // Function to delete a number
 const deleteNumber = async (id: number) => {
   try {
-    await axios.delete(`/api/numbers/${id}`);
+    await axios.delete(/api/numbers/${id});
     numbers.value = numbers.value.filter(number => number.id !== id);
   } catch (err) {
     error.value = 'Failed to delete number.';
