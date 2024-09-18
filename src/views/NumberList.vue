@@ -144,7 +144,7 @@ const closeEditDialog = () => {
 const updateNumber = async () => {
   if (editedNumber.value) {
     try {
-      await axios.put(/api/numbers/${editedNumber.value.id}, fields.value);
+      await axios.put(`/api/numbers/${editedNumber.value.id}`, fields.value);
       numbers.value = numbers.value.map(number =>
           number.id === editedNumber.value!.id ? { ...editedNumber.value, ...fields.value } : number
       );
@@ -159,7 +159,7 @@ const updateNumber = async () => {
 // Function to delete a number
 const deleteNumber = async (id: number) => {
   try {
-    await axios.delete(/api/numbers/${id});
+    await axios.delete(`/api/numbers/${id}`);
     numbers.value = numbers.value.filter(number => number.id !== id);
   } catch (err) {
     error.value = 'Failed to delete number.';
