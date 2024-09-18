@@ -6,93 +6,119 @@
         <!-- Age Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="age" class="font-bold block mb-2">Age</label>
-          <InputNumber
-              id="age"
-              v-model="formData.age"
-              inputId="integeronly"
-              fluid
-              :min="0"
-              :max="120"
-              :placeholder="'Enter age'"
-          />
+          <Field name="age" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                v-model="formData.age"
+                v-bind="{ ...field, value: undefined }"
+                :min="0"
+                :max="120"
+                placeholder="Enter age"
+                fluid
+            />
+            <ErrorMessage name="age" class="error"/>
+          </Field>
         </div>
 
         <!-- Decimal Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="decimal" class="font-bold block mb-2">Decimal</label>
-          <InputNumber
-              id="decimal"
-              v-model="formData.decimal"
-              inputId="locale-us"
-              locale="en-US"
-              :minFractionDigits="2"
-              fluid
-              :placeholder="'Enter decimal value'"
-          />
+          <Field name="decimal" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                id="decimal"
+                v-model="formData.decimal"
+                inputId="locale-us"
+                locale="en-US"
+                :minFractionDigits="2"
+                fluid
+                :placeholder="'Enter decimal value'"
+                @input="field.onInput"
+                @blur="field.onBlur"
+            />
+            <ErrorMessage name="decimal" class="error" />
+          </Field>
         </div>
 
         <!-- Currency Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="currency-us" class="font-bold block mb-2">United States</label>
-          <InputNumber
-              id="currency"
-              v-model="formData.currency"
-              inputId="currency-us"
-              mode="currency"
-              currency="USD"
-              locale="en-US"
-              fluid
-              :placeholder="'Enter amount'"
-          />
+          <Field name="currency" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                v-model="formData.currency"
+                v-bind="{ ...field, value: undefined }"
+                id="currency"
+                inputId="currency-us"
+                mode="currency"
+                currency="USD"
+                locale="en-US"
+                fluid
+                :placeholder="'Enter amount'"
+            />
+            <ErrorMessage name="currency" class="error"/>
+          </Field>
         </div>
 
         <!-- Prefix Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="prefix" class="font-bold block mb-2">Prefix</label>
-          <InputNumber
-              id="prefix"
-              v-model="formData.prefix"
-              inputId="percent"
-              prefix="%"
-              fluid
-              :placeholder="'Enter percentage'"
-          />
+          <Field name="prefix" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                v-model="formData.prefix"
+                v-bind="{ ...field, value: undefined }"
+                id="prefix"
+                inputId="percent"
+                prefix="%"
+                fluid
+                :placeholder="'Enter percentage'"
+            />
+            <ErrorMessage name="prefix" class="error"/>
+          </Field>
         </div>
 
         <!-- Suffix Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="suffix" class="font-bold block mb-2">Suffix</label>
-          <InputNumber
-              id="suffix"
-              v-model="formData.suffix"
-              inputId="mile"
-              suffix="mile"
-              fluid
-              :placeholder="'Enter distance'"
-          />
+          <Field name="suffix" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                v-model="formData.suffix"
+                v-bind="{ ...field, value: undefined }"
+                id="suffix"
+                inputId="mile"
+                suffix="mile"
+                fluid
+                :placeholder="'Enter distance'"
+            />
+            <ErrorMessage name="suffix" class="error"/>
+          </Field>
         </div>
 
+
+        <!-- Button Field -->
         <div class="flex-column font-bold block mb-2">
           <label for="button" class="font-bold block mb-2">Button</label>
-          <InputNumber
-              id="button"
-              v-model="formData.button"
-              showButtons
-              buttonLayout="horizontal"
-              :step="1"
-              mode="currency"
-              currency="EUR"
-              fluid
-              :placeholder="'Enter value'">
-
-            <template #incrementbuttonicon>
-              <span class="pi pi-plus"/>
-            </template>
-            <template #decrementbuttonicon>
-              <span class="pi pi-minus"/>
-            </template>
-          </InputNumber>
+          <Field name="button" rules="required" v-slot="{ field, errorMessage }">
+            <InputNumber
+                v-model="formData.button"
+                v-bind="{ ...field, value: undefined }"
+                id="button"
+                showButtons
+                buttonLayout="horizontal"
+                :step="1"
+                mode="currency"
+                currency="EUR"
+                fluid
+                :placeholder="'Enter value'"
+            >
+              <template #incrementbuttonicon>
+                <span class="pi pi-plus"/>
+              </template>
+              <template #decrementbuttonicon>
+                <span class="pi pi-minus"/>
+              </template>
+            </InputNumber>
+            <ErrorMessage name="button" class="error"/>
+          </Field>
         </div>
+
 
       </div>
 
@@ -104,11 +130,13 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
-import { Form } from 'vee-validate';
+import {reactive} from 'vue';
+import {Form, Field, ErrorMessage, configure} from 'vee-validate';
+import {required, min_value, max_value} from '@vee-validate/rules';
 import InputNumber from 'primevue/inputnumber';
 import Button from 'primevue/button';
-import axios from "axios";
+import axios from 'axios';
+import {defineRule} from "vee-validate";
 
 const formData = reactive({
   age: null,
@@ -119,32 +147,50 @@ const formData = reactive({
   button: null,
 });
 
+configure({
+
+  validateOnInput:true
+
+});
+
+defineRule('required', required);
+defineRule('min_value', min_value);
+defineRule('max_value', max_value);
+
 const handleSubmit = async () => {
-  const response = axios.post('/api/numbers', formData)
-  console.log(response)
-  console.log('Form data:', formData);
-  console.log('Button:',formData.button);
-
-
-  alert('Form submitted successfully!');
+  try {
+    const response = await axios.post('/api/numbers', formData);
+    console.log('Form data:', formData);
+    alert('Form submitted successfully!');
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    alert('An error occurred. Please try again.');
+  }
 };
 </script>
 
 <style scoped>
-h2{
+h2 {
   padding: 2rem;
   font-size: 3rem;
   text-align: center;
 }
-form{
+
+form {
   margin: 0 auto;
   background-color: #f0f0f0;
   max-width: 400px;
-  padding: 3rem ;
+  padding: 3rem;
   border-radius: 1rem;
 }
+
 .submit-button {
   display: block;
   margin: 0 auto;
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
 }
 </style>
