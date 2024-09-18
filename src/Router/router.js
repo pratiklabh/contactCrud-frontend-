@@ -8,7 +8,7 @@ const CustomValidation = () => import('../views/CustomValidation.vue');
 // const CustomValidationList = () => import('../views/CustomValidationList.vue');
 const Number = () => import('../views/Number.vue')
 const NumberList = () => import('../views/NumberList.vue')
-
+const Lazy = () => import('../views/Lazy.vue')
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -51,6 +51,11 @@ const router = createRouter({
             path:'/numberList',
             name: NumberList,
             component: NumberList,
+        },
+        {
+          path: '/lazy',
+          name:Lazy,
+          component: Lazy,
         },
     ],
 })
