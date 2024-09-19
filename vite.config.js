@@ -23,7 +23,12 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8080/ContactCRUD-final', // backend server URL
         changeOrigin: true, // Changes the origin of the host header to the target URL
+      },
+      '/month':{
+        target:'http://103.94.159.197:7071',
+        changeOrigin: true,
       }
     }
+
   }
 })
