@@ -9,6 +9,9 @@ const CustomValidation = () => import('../views/CustomValidation.vue');
 const Number = () => import('../views/Number.vue')
 const NumberList = () => import('../views/NumberList.vue')
 const Lazy = () => import('../views/Lazy.vue')
+const LazySecond = () => import('../views/LazySecond.vue')
+const Autocomplete = () => import ('../views/LazySecond.vue')
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -37,11 +40,6 @@ const router = createRouter({
             name: 'customValidation',
             component: CustomValidation,
         },
-        // {
-        //     path: '/customValidationList',
-        //     name: 'customValidationList',
-        //     component: CustomValidationList,
-        // },
         {
             path: '/number',
             name:'/number',
@@ -56,6 +54,11 @@ const router = createRouter({
           path: '/lazy',
           name:Lazy,
           component: Lazy,
+        },
+        {
+            path: '/lazySecond',
+            name:LazySecond,
+            component: LazySecond,
         },
     ],
 })
