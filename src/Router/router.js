@@ -12,7 +12,7 @@ const Lazy = () => import('../views/Lazy.vue')
 const LazySecond = () => import('../views/LazySecond.vue')
 const Autocomplete = () => import ('../views/LazySecond.vue')
 const LazyProject = () => import('../views/LazyProject.vue')
-
+const AutoComplete = () => import('../views/AutoComplete.vue')
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -66,6 +66,11 @@ const router = createRouter({
             name:LazyProject,
             component: LazyProject,
         },
+        {
+            path: '/autocomplete',
+            name: AutoComplete,
+            component: AutoComplete
+        }
     ],
 })
 
