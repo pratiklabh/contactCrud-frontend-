@@ -15,6 +15,7 @@
             delay: 20,
             onLazyLoad: onLazyLoad
           }"
+           @filter ="onFilter"
         />
       </div>
     </div>
@@ -29,15 +30,18 @@ import { Form } from 'vee-validate';
 
 const selectedMonth = ref(null);
 const months = ref([]);
-const totalMonths = ref(143);  // Total number of months, update as needed
+const totalMonths = ref(144);  // Total number of months, update as needed
 const first = ref(0);  // Start index for lazy loading
 const loading = ref(false);  // To track the loading state
 
 // Function to fetch months from the API
-const fetchMonths = async (start, end) => {
+const fetchMonths = async (start, end, filter='') => {
   try {
     loading.value = true;  // Set loading to true while fetching
-    const response = await axios.get(`/month/lazy?first=${start}&rows=${end - start}`);
+    console.log('filter = ', filter);
+    console.log(`/month/lazy?first=${start}&rows=${end - start}&filters[monthName.name][value]=${filter}&filters[monthName.name][matchMode]=contains`);
+
+    const response = await axios.get(`/month/lazy?first=${start}&rows=${end - start}&filters[monthName.name][value]=${filter}&filters[monthName.name][matchMode]=contains`);
     const data = response.data;
 
     if (data.success === true && Array.isArray(data.result)) {
@@ -75,6 +79,20 @@ const onLazyLoad = (event) => {
     fetchMonths(first.value, end);
   }
 };
+
+//for filter
+const onFilter = (event) =>{
+  // console.log('Event = ', event);
+  let filterValue = event.value;
+  first.value =0;
+  months.value =[];
+
+  console.log(`Fetching filtered months from ${first.value} to ${first.value +20} filter = ${filterValue}`);
+
+  fetchMonths(first.value,first.value+20, filterValue);
+}
+
+
 </script>
 
 <style scoped>
@@ -97,11 +115,5 @@ Form {
 .dropdown-container {
   position: relative;
   width: 100%;
-}
-
-.p-dropdown-panel {
-  max-height: 200px; /* Adjust height as needed */
-  overflow-y: auto;
-  border: 1px solid #ccc;
 }
 </style>
