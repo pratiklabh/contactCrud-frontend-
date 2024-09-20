@@ -5,7 +5,7 @@
       <div class="dropdown-container">
         <Select
             v-model="selectedMonth"
-            :options="months"
+            :options="months" filter
             optionLabel="label"
             placeholder="Select a Month"
             class="w-full md:w-56"
@@ -30,7 +30,6 @@ import { Form } from 'vee-validate';
 const selectedMonth = ref(null);
 const months = ref([]);
 const totalMonths = ref(143);  // Total number of months, update as needed
-const size = 20;  // Number of months to load per request
 const first = ref(0);  // Start index for lazy loading
 const loading = ref(false);  // To track the loading state
 
@@ -68,7 +67,7 @@ const onLazyLoad = (event) => {
 
   // Only load more if all the data is not fetched yet, and it's not currently loading
   if (!loading.value && last >= months.value.length && months.value.length < totalMonths.value) {
-    const end = first.value + size;  // Calculate the end index for the next batch
+    const end = first.value + 20;  // Calculate the end index for the next batch
 
     console.log(`Fetching months from ${first.value} to ${end}`);
 
