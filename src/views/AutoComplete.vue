@@ -34,13 +34,13 @@ const filteredMonths = ref([]);
 const months = ref([]);
 const totalMonths = ref(0);  // Total number of months, update as needed
 const first = ref(0);  // Start index for lazy loading
-const loading = ref(false);  // To track the loading state
 const currentFilter = ref(''); // Reactive reference for the current filter
 
 // Function to fetch months from the API
 const fetchMonths = async (start, end, filter = '') => {
+  let loading = false
   try {
-    loading.value = true;  // Set loading to true while fetching
+    loading= true;  // Set loading to true while fetching
     console.log('filter = ', filter);
     console.log(`/month/lazy?first=${start}&rows=${end - start}&filters[monthName.name][value]=${filter}&filters[monthName.name][matchMode]=contains`);
 
@@ -66,7 +66,7 @@ const fetchMonths = async (start, end, filter = '') => {
   } catch (error) {
     console.error("Error fetching months:", error);
   } finally {
-    loading.value = false;
+    loading= false;
   }
 };
 
@@ -75,7 +75,7 @@ const onLazyLoad = (event) => {
   const { first: eventFirst, last } = event;
 
   // Only load more if all the data is not fetched yet, and it's not currently loading
-  if (!loading.value && last >= months.value.length && months.value.length < totalMonths.value) {
+  if (last >= months.value.length && months.value.length < totalMonths.value) {
     const end = first.value + 20;  // Calculate the end index for the next batch
     console.log(`Fetching months from ${first.value} to ${end}`);
     fetchMonths(first.value, end, currentFilter.value); // Pass the current filter value
