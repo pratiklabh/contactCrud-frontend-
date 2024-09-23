@@ -15,7 +15,7 @@
             delay: 20,
             onLazyLoad: onLazyLoad
           }"
-           @filter ="onFilter"
+            @filter="onFilter"
         />
       </div>
     </div>
@@ -30,15 +30,16 @@ import { Form } from 'vee-validate';
 
 const selectedMonth = ref(null);
 const months = ref([]);
-const totalMonths = ref(144);  // Total number of months, update as needed
-const first = ref(0);  // Start index for lazy loading
-const loading = ref(false);  // To track the loading state
+const totalMonths = ref(144); // Total number of months, update as needed
+const first = ref(0); // Start index for lazy loading
+const loading = ref(false); // To track the loading state
+const filterValue = ref(''); // Store the filter value separately
 
 // Function to fetch months from the API
-const fetchMonths = async (start, end, filter='') => {
+const fetchMonths = async (start, end, filter = '') => {
   try {
-    loading.value = true;  // Set loading to true while fetching
-    console.log('filter = ', filter);
+    loading.value = true; // Set loading to true while fetching
+    console.log('filter =', filter);
     console.log(`/month/lazy?first=${start}&rows=${end - start}&filters[monthName.name][value]=${filter}&filters[monthName.name][matchMode]=contains`);
 
     const response = await axios.get(`/month/lazy?first=${start}&rows=${end - start}&filters[monthName.name][value]=${filter}&filters[monthName.name][matchMode]=contains`);
@@ -61,38 +62,35 @@ const fetchMonths = async (start, end, filter='') => {
   } catch (error) {
     console.error("Error fetching months:", error);
   } finally {
-    loading.value = false;  // Set loading to false after fetching
+    loading.value = false;
   }
 };
 
 // Function to handle lazy loading triggered by scrolling
 const onLazyLoad = (event) => {
-  const { first: eventFirst, last} = event;
+  const { first: eventFirst, last } = event;
 
   // Only load more if all the data is not fetched yet, and it's not currently loading
   if (!loading.value && last >= months.value.length && months.value.length < totalMonths.value) {
-    const end = first.value + 20;  // Calculate the end index for the next batch
+    const end = first.value + 20; // Calculate the end index for the next batch
 
     console.log(`Fetching months from ${first.value} to ${end}`);
 
-    // Fetch the next batch of months
-    fetchMonths(first.value, end);
+    // Fetch the next batch of months with the current filter value
+    fetchMonths(first.value, end, filterValue.value);
   }
 };
 
-//for filter
-const onFilter = (event) =>{
-  // console.log('Event = ', event);
-  let filterValue = event.value;
-  first.value =0;
-  months.value =[];
+// Function to handle filtering
+const onFilter = (event) => {
+  filterValue.value = event.value; // Store the filter value
+  first.value = 0;
+  months.value = [];
 
-  console.log(`Fetching filtered months from ${first.value} to ${first.value +20} filter = ${filterValue}`);
+  console.log(`Fetching filtered months from ${first.value} to ${first.value + 20}, filter = ${filterValue.value}`);
 
-  fetchMonths(first.value,first.value+20, filterValue);
-}
-
-
+  fetchMonths(first.value, first.value + 20, filterValue.value);
+};
 </script>
 
 <style scoped>
@@ -108,7 +106,7 @@ h2 {
 }
 
 Form {
-  width: 75rem;
+  width: 50rem;
   margin: 0 auto;
 }
 

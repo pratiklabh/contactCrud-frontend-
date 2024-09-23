@@ -65,7 +65,7 @@ const fetchMonths = async (start, end, filter = '') => {
   } catch (error) {
     console.error("Error fetching months:", error);
   } finally {
-    loading.value = false;  // Set loading to false after fetching
+    loading.value = false;
   }
 };
 
@@ -107,7 +107,7 @@ h2 {
 }
 
 Form {
-  width: 75rem;
+  width: 60rem;
   margin: 0 auto;
 }
 
