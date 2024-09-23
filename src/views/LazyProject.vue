@@ -23,14 +23,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Select from 'primevue/select';
 import { Form } from 'vee-validate';
 
 const selectedMonth = ref(null);
 const months = ref([]);
-const totalMonths = ref(144); // Total number of months, update as needed
+const totalMonths = ref(0); // Total number of months, update as needed
 const first = ref(0); // Start index for lazy loading
 const loading = ref(false); // To track the loading state
 const filterValue = ref(''); // Store the filter value separately
@@ -50,6 +50,8 @@ const fetchMonths = async (start, end, filter = '') => {
         label: `${month.id} - ${month.monthName.name}-${month.endDate}`,
         value: month.id
       }));
+
+      totalMonths.value = data.totalCount;
 
       // Append new months to the existing list
       months.value = [...months.value, ...newMonths];
@@ -91,6 +93,10 @@ const onFilter = (event) => {
 
   fetchMonths(first.value, first.value + 20, filterValue.value);
 };
+
+onMounted( ()=>{
+  fetchMonths(0,20);
+});
 </script>
 
 <style scoped>

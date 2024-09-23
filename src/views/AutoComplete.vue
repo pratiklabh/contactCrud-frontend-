@@ -32,7 +32,7 @@ import { Form } from 'vee-validate';
 const selectedMonth = ref(null);
 const filteredMonths = ref([]);
 const months = ref([]);
-const totalMonths = ref(144);  // Total number of months, update as needed
+const totalMonths = ref(0);  // Total number of months, update as needed
 const first = ref(0);  // Start index for lazy loading
 const loading = ref(false);  // To track the loading state
 const currentFilter = ref(''); // Reactive reference for the current filter
@@ -57,6 +57,7 @@ const fetchMonths = async (start, end, filter = '') => {
       months.value = [...months.value, ...newMonths];
       filteredMonths.value = months.value;
 
+      totalMonths.value = data.totalCount;
       // Update the start index for the next batch
       first.value = end;
     } else {
