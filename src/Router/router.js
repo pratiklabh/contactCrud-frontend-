@@ -16,6 +16,7 @@ const LazyProject = () => import('../views/LazyProject.vue')
 const AutoComplete = () => import('../views/AutoComplete.vue')
 const PanelTest = () => import ('../views/PanelTest.vue')
 const DatatableTest = () => import ('../views/DatatableTest.vue')
+const SupplierAutocomplete = () => import ('../views/SupplierAutocomplete.vue')
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -85,6 +86,11 @@ const router = createRouter({
             path: '/datatable',
             name: DatatableTest,
             component: DatatableTest,
+        },
+        {
+            path:'/supplier',
+            name: SupplierAutocomplete,
+            component: SupplierAutocomplete,
         }
     ],
 })

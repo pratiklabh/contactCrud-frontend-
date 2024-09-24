@@ -27,7 +27,8 @@ export default defineConfig({
       '/month':{
         target:'http://103.94.159.197:7071',
         changeOrigin: true,
-      }
+      },
+
     }
 
   }
