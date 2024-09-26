@@ -5,36 +5,39 @@
       <DataTable :value="info">
         <Column header="Name">
           <template #body="{ data }">
-            <Field name="name" v-slot="{field}">
+            <Field name="name" rules="required" v-slot="{field}">
               <InputText
                   id="name"
                   v-bind="field"
                   v-model="data.name"
               />
+              <ErrorMessage name="name" class="error"/>
             </Field>
           </template>
         </Column>
 
         <Column header="Phone">
           <template #body="{data}">
-            <Field name="phone" v-slot="{field}">
+            <Field name="phone" rules="required" v-slot="{field}">
               <InputText
                   id="phone"
                   v-bind="field"
                   v-model="data.phone"
               />
+              <ErrorMessage name="phone" class="error"/>
             </Field>
           </template>
         </Column>
 
         <Column header="Address">
           <template #body="{data}">
-            <Field name="address" v-slot="{field}">
+            <Field name="address" rules="required" v-slot="{field}">
               <InputText
                   id="address"
                   v-bind="field"
                   v-model="data.address"
               />
+              <ErrorMessage name="address" class="error"/>
             </Field>
           </template>
         </Column>
@@ -53,8 +56,10 @@
 <script setup>
 
 import {ref} from "vue";
-import { Field} from "vee-validate";
+import {defineRule, ErrorMessage, Field} from "vee-validate";
+import {required} from "@vee-validate/rules";
 
+defineRule('required', required);
 
 const info = ref([
   {name: '', phone: '', address: ''},
@@ -78,5 +83,8 @@ const handleSubmit = () => {
   text-align: center;
 }
 
-
+.error {
+  color: red;
+  padding: 0.5rem;
+}
 </style>
