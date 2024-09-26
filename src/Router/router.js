@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Panel from "primevue/panel";
 
 const ContactMe = () => import('../views/ContactMe.vue');
 const ContactList = () => import('../views/ContactList.vue');
@@ -17,7 +16,7 @@ const AutoComplete = () => import('../views/AutoComplete.vue')
 const PanelTest = () => import ('../views/PanelTest.vue')
 const DatatableTest = () => import ('../views/DatatableTest.vue')
 const SupplierAutocomplete = () => import ('../views/SupplierAutocomplete.vue')
-
+const Information = () => import('../views/Information.vue')
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -86,6 +85,11 @@ const router = createRouter({
             path: '/datatable',
             name: DatatableTest,
             component: DatatableTest,
+        },
+        {
+            path: '/info',
+            name: Information,
+            component: Information,
         },
         {
             path:'/supplier',
