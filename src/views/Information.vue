@@ -3,7 +3,7 @@
     <h2> Information Form </h2>
     <Button icon="pi pi-plus" class="p-button-success" @click="addRow"/>
 
-    <Form @submit="handleSubmit">
+    <Form @submit="handleSubmit" v-slot="{resetForm}">
       <DataTable :value="info" :dataKey="'id'">
         <Column header="Name">
           <template #body="{ data }">
@@ -83,9 +83,10 @@ const removeRow = (id) => {
   info.value = info.value.filter(row => row.id !== id);
 }
 
-const handleSubmit = () => {
+const handleSubmit = (values, {resetForm}) => {
   alert('Form Submitted !!!');
-  console.log('submitted', info.value);
+  console.log('submitted', values);
+  resetForm();
 };
 </script>
 

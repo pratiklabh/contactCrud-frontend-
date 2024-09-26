@@ -1,7 +1,7 @@
 <template>
   <h2>Transaction Information Form</h2>
 
-  <Form @submit="handleSubmit" class="transaction-form">
+  <Form @submit="handleSubmit" class="transaction-form"  v-slot="{resetForm}">
     <DataTable :value="transactions" tableStyle="min-width: 50rem">
       <!-- Payment Mode Dropdown Column -->
       <Column header="Payment Mode">
@@ -88,9 +88,10 @@ const resetBankField = (data) => {
 };
 
 // Form submission handler
-const handleSubmit = () => {
+const handleSubmit = (values, {resetForm}) => {
   alert('Form submitted successfully!');
   console.log('Submitted Data:', JSON.stringify(transactions.value, null, 2));
+  resetForm();
 };
 </script>
 
