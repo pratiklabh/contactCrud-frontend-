@@ -7,7 +7,7 @@
       <DataTable :value="info" :dataKey="'id'">
         <Column header="Name">
           <template #body="{ data }">
-            <Field :name="`name-${data.id}`" rules="required" v-slot="{field}">
+            <Field :name="`name-${data.id}`" rules="required|min:5|namePattern" v-slot="{field}">
               <InputText
                   :id="`name-${data.id}`"
                   v-bind="field"
@@ -20,7 +20,7 @@
 
         <Column header="Phone">
           <template #body="{ data }">
-            <Field :name="`phone-${data.id}`" rules="required" v-slot="{field}">
+            <Field :name="`phone-${data.id}`" rules="required|phonePattern" v-slot="{field}">
               <InputText
                   :id="`phone-${data.id}`"
                   v-bind="field"
@@ -33,7 +33,7 @@
 
         <Column header="Address">
           <template #body="{data}">
-            <Field :name="`address-${data.id}`" rules="required" v-slot="{field}">
+            <Field :name="`address-${data.id}`" rules="required|min:2" v-slot="{field}">
               <InputText
 
                   :id="`address-${data.id}`"
@@ -44,6 +44,7 @@
             </Field>
           </template>
         </Column>
+
         <Column header="Actions">
           <template #body="{data}">
             <Button icon="pi pi-trash" class="p-button-danger" @click="removeRow(data.id)"/>
@@ -52,23 +53,32 @@
 
       </DataTable>
 
-
       <Button type="submit" class="submit-button">
         Submit
       </Button>
-
     </Form>
-
-
   </div>
 </template>
 
 <script setup>
 import {ref} from "vue";
 import {defineRule, ErrorMessage, Field} from "vee-validate";
-import {required} from "@vee-validate/rules";
+import {max, min, required} from "@vee-validate/rules";
 
 defineRule('required', required);
+defineRule('min', min);
+defineRule('max',max);
+
+defineRule('namePattern', value => {
+  const regex = /^(?! )[A-Za-z]+(?: [A-Za-z]+)+$/;
+  return regex.test(value) || 'Name must have a first name and a last name.';
+});
+
+defineRule('phonePattern', value => {
+  // Regex to validate phone numbers
+  const regex = /^\d{10}$/;
+  return regex.test(value) || 'Phone number should be exactly 10 digits .';
+});
 
 const info = ref([
   {id: '1', name: '', phone: '', address: ''},
