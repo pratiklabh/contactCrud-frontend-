@@ -59,12 +59,6 @@ import { defineRule } from 'vee-validate';
 import { required } from '@vee-validate/rules';
 
 defineRule('required', required);
-defineRule('required_if', (value, [compareField, compareValue], ctx) => {
-  if (ctx.form[compareField] === compareValue) {
-    return !!value || 'This field is required when payment mode is Online Banking.';
-  }
-  return true;
-});
 
 // Function to determine required rule for bank field
 const requiredIfOnlineBanking = (paymentMode) => {
