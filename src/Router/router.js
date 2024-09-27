@@ -18,6 +18,9 @@ const DatatableTest = () => import ('../views/DatatableTest.vue')
 const SupplierAutocomplete = () => import ('../views/SupplierAutocomplete.vue')
 const Information = () => import('../views/Information.vue')
 const AlignmentTest = () => import ('../views/AlignmentTest.vue')
+const AlignmentTestOne = () => import ('../views/AlignmentTestOne.vue')
+
+
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
@@ -101,6 +104,11 @@ const router = createRouter({
             path: '/alignment',
             name: AlignmentTest,
             component: AlignmentTest
+        },
+        {
+            path: '/alignmentOne',
+            name: AlignmentTestOne,
+            component: AlignmentTestOne
         },
     ],
 })
