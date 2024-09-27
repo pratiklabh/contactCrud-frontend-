@@ -1,7 +1,7 @@
 <template>
   <h2>Transaction Information Form</h2>
 
-  <Form @submit="handleSubmit" class="transaction-form"  v-slot="{resetForm}">
+  <Form @submit="handleSubmit" class="transaction-form"  v-slot="{resetForm, setFieldValue}">
     <DataTable :value="transactions" tableStyle="min-width: 50rem">
       <!-- Payment Mode Dropdown Column -->
       <Column header="Payment Mode">
@@ -15,7 +15,7 @@
                 optionValue="value"
                 placeholder="Select Payment Mode"
                 class="w-full"
-                @change="resetBankField(data)"
+                @change="resetBankField(data,setFieldValue)"
             />
             <ErrorMessage name="paymentMode" class="error" />
           </Field>
@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { ErrorMessage, Field, Form } from 'vee-validate';
+import {reactive, ref} from 'vue';
+import { ErrorMessage, Field, Form, useForm} from 'vee-validate';
 import Select from 'primevue/select';
 import Button from 'primevue/button';
 import DataTable from 'primevue/datatable';
@@ -60,7 +60,12 @@ import { required } from '@vee-validate/rules';
 
 defineRule('required', required);
 
-// Function to determine required rule for bank field
+const data = reactive({
+  paymentMode: '',
+  bank: '',
+});
+
+// to determine required rule for bank field
 const requiredIfOnlineBanking = (paymentMode) => {
   return paymentMode === 'Online Banking' ? 'required' : '';
 };
@@ -80,10 +85,11 @@ const banks = ref([
   { label: 'NIC ASIA', value: 'NIC ASIA' },
 ]);
 
-// Function to reset bank field when payment mode changes
-const resetBankField = (data) => {
+// to reset bank field when payment mode changes
+const resetBankField = (data,setFieldValue) => {
   if (data.paymentMode !== 'Online Banking') {
     data.bank = ''; // Clear the bank field
+    setFieldValue(`bank`,'')
   }
 };
 
