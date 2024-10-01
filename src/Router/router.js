@@ -20,6 +20,7 @@ const Information = () => import('../views/Information.vue')
 const AlignmentTest = () => import ('../views/AlignmentTest.vue')
 const AlignmentTestOne = () => import ('../views/AlignmentTestOne.vue')
 const Pdf = () => import ('../views/Pdf.vue')
+const Html2Pdf = () => import ('../views/Html2pdf.vue')
 
 
 const router = createRouter({
@@ -115,6 +116,11 @@ const router = createRouter({
             path: '/pdf',
             name: Pdf,
             component: Pdf
+        },
+        {
+            path: '/html2pdf',
+            name: Html2Pdf,
+            component: Html2Pdf
         },
     ],
 })
