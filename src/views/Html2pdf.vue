@@ -1,20 +1,18 @@
 <template>
   <div class="table-container">
     <h2>Sales Details</h2>
-
     <!-- PrimeVue DataTable -->
     <DataTable :value="salesDetails" tableStyle="min-width: 50rem">
-      <Column field="date" header="Date" />
-      <Column field="total" header="Total" />
-      <Column field="customerName" header="Customer Name" />
-      <Column field="paymentMode" header="Payment Mode" />
+      <Column field="date" header="Date"/>
+      <Column field="total" header="Total"/>
+      <Column field="customerName" header="Customer Name"/>
+      <Column field="paymentMode" header="Payment Mode"/>
       <Column header="Actions">
         <template #body="slotProps">
-          <Button label="View Details" @click="viewDetails(slotProps.data)" />
+          <Button label="View Details" @click="viewDetails(slotProps.data)"/>
         </template>
       </Column>
     </DataTable>
-
     <!-- Dialog for Sales Details -->
     <Dialog v-model:visible="dialogVisible" header="Sales Details" :modal="true" :closable="true" style="width: 50vw">
       <template v-if="selectedSalesDetail">
@@ -40,25 +38,49 @@
           </tbody>
         </table>
         <h3>Grand Total: {{ grandTotal }}</h3>
-        <Button label="Print" @click="printPreview(selectedSalesDetail)" />
+        <Button label="Print" @click="openPrintSizeDialog"/>
       </template>
+    </Dialog>
+    <!-- Dialog for Print Size Selection -->
+    <Dialog v-model:visible="printSizeDialogVisible" header="Select Paper Size" :modal="true" :closable="true"
+            style="width: 30vw">
+      <div>
+        <p>Select the paper size for the PDF:</p>
+        <Select v-model="selectedPaperSize" :options="paperSizes" optionLabel="label" optionValue="value"
+                placeholder="Select Paper Size"/>
+
+        <div style="margin-top: 1rem;">
+          <Button label="Confirm" @click="confirmPrint"/>
+        </div>
+      </div>
     </Dialog>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import axios from 'axios';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
+import Select from 'primevue/select';
 import html2pdf from 'html2pdf.js'; // Import html2pdf.js
 
 const salesDetails = ref([]);
 const dialogVisible = ref(false);
+const printSizeDialogVisible = ref(false);
 const selectedSalesDetail = ref(null);
 const grandTotal = ref(0);
+const selectedPaperSize = ref(null); //Holds the selected paper size
+//Dropdown for paper sizes
+const paperSizes = ref([
+  {label: 'A4', value: 'a4'},
+  {label: 'A5', value: 'a5'},
+  {label: '58 mm', value: [58, 230]},
+  {label: '72 mm', value: [72, 230]},
+  {label: '80 mm', value: [80, 230]},
+]);
+
 
 // Fetch sales data from the API
 const fetchSalesData = async () => {
@@ -73,42 +95,43 @@ const fetchSalesData = async () => {
     console.error('Error fetching sales data:', error);
   }
 };
-
 // View Details function to show dialog with selected sales detail
 const viewDetails = async (salesDetail) => {
   const salesId = salesDetail.id;
   const response = await axios.get(`sbs-api/sales/details/${salesId}`);
-
   if (response.data.success === "true") {
     selectedSalesDetail.value = {
       ...salesDetail,
       items: response.data.result
     };
-
     // Calculate grand total
     grandTotal.value = selectedSalesDetail.value.items.reduce((total, item) => {
       return total + (item.rate - item.discount) * item.quantity;
     }, 0);
-
     dialogVisible.value = true; // Open the dialog
   } else {
     console.error('Error fetching sales details:', response.data.message);
   }
 };
-
-
+// Open the print size dialog
+const openPrintSizeDialog = () => {
+  printSizeDialogVisible.value = true;
+};
+// Confirm print size selection and generate PDF
+const confirmPrint = () => {
+  printSizeDialogVisible.value = false; // Close size dialog
+  printPreview(selectedSalesDetail.value);
+};
 const printPreview = async (salesDetail) => {
   const salesId = salesDetail.id;
   const response = await axios.get(`sbs-api/sales/details/${salesId}`);
-
   if (response.data.success === "true") {
     const details = response.data.result;
-
     // Generate printable HTML content
     let printContent = `
       <div>
         <h2>Sales Detail</h2>
-      <p><strong><span style="font-size: 10px;">Customer Name: ${salesDetail.customerName}</span></strong> </p>
+        <p><strong><span style="font-size: 10px;">Customer Name: ${salesDetail.customerName}</span></strong> </p>
         <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.7rem">
           <thead>
             <tr>
@@ -121,9 +144,7 @@ const printPreview = async (salesDetail) => {
           </thead>
           <tbody>
     `;
-
     let grandTotal = 0;
-
     details.forEach(item => {
       const total = (item.rate - item.discount) * item.quantity;
       grandTotal += total;
@@ -137,14 +158,12 @@ const printPreview = async (salesDetail) => {
         </tr>
       `;
     });
-
     printContent += `
           </tbody>
         </table>
         <h3>Grand Total: ${grandTotal}</h3>
       </div>
     `;
-
     // Create a temporary element to hold the HTML content
     const element = document.createElement('div');
     element.innerHTML = printContent;
@@ -154,67 +173,25 @@ const printPreview = async (salesDetail) => {
     const opt = {
       margin: [2, 2],
       filename: `sales-detail-${salesId}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      image: {type: 'jpeg', quality: 0.98},
+      html2canvas: {scale: 2},
+      jsPDF: {unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait'}
     };
-
     html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
       // Automatically trigger the print dialog
       pdf.autoPrint();
       window.open(pdf.output('bloburl'), '_blank'); // Open the PDF in a new tab
     });
-
     // Remove the temporary element after generating the PDF
     document.body.removeChild(element);
   } else {
     console.error('Error fetching sales details:', response.data.message);
   }
 };
-
-
-// Fetch data on component mount
-onMounted(() => {
-  fetchSalesData();
-});
+onMounted(fetchSalesData);
 </script>
-
 <style scoped>
-h2 {
-  text-align: center;
-  font-size: 1.5rem;
-  padding: 1.5rem;
-}
-
-h3 {
-  font-size: 1rem;
-}
-
-p {
-  font-size: 0.5rem;
-}
-
-table {
-  font-size: 0.9rem;
-  width: 100%;
-  border-collapse: collapse;
-  text-align: center;
-}
-
-th, td {
-  border: 1px solid #000;
-  padding: 0.5rem;
-}
-
 .table-container {
-  margin: 0 auto;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-radius: 0.5rem;
-}
-
-button {
-  font-size: 0.9rem;
+  padding: 2rem;
 }
 </style>
-
