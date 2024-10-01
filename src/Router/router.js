@@ -19,6 +19,7 @@ const SupplierAutocomplete = () => import ('../views/SupplierAutocomplete.vue')
 const Information = () => import('../views/Information.vue')
 const AlignmentTest = () => import ('../views/AlignmentTest.vue')
 const AlignmentTestOne = () => import ('../views/AlignmentTestOne.vue')
+const Pdf = () => import ('../views/Pdf.vue')
 
 
 const router = createRouter({
@@ -109,6 +110,11 @@ const router = createRouter({
             path: '/alignmentOne',
             name: AlignmentTestOne,
             component: AlignmentTestOne
+        },
+        {
+            path: '/pdf',
+            name: Pdf,
+            component: Pdf
         },
     ],
 })

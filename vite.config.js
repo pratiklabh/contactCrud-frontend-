@@ -29,6 +29,10 @@ export default defineConfig({
         changeOrigin: true,
       },
 
+      '/sbs-api': {
+        target: 'http://localhost:8080/SBS-1.0', // backend server URL
+        changeOrigin: true, // Changes the origin of the host header to the target URL
+      },
     }
 
   }
