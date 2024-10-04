@@ -130,11 +130,10 @@ const confirmPrint = async () => {
 // Fetch HTML template from API and generate PDF
 const generatePdf = async (salesDetail) => {
   try {
-    const response = await axios.get(`/sbs-api/sales/template/1`);
+    const response = await axios.get(`/sbs-api/sales/template/1`); //html template from DB
     if (response.data.success === 'true') {
       let htmlTemplate = response.data.result.template;
 
-      // Log salesDetail to debug
       console.log('Sales Detail:', salesDetail);
 
       let templateData = {
