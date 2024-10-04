@@ -1,7 +1,7 @@
 <template>
   <div class="table-container">
     <h2>Sales Details</h2>
-    <!-- PrimeVue DataTable -->
+
     <DataTable :value="salesDetails" tableStyle="min-width: 50rem">
       <Column field="date" header="Date"/>
       <Column field="total" header="Total"/>
@@ -13,7 +13,7 @@
         </template>
       </Column>
     </DataTable>
-    <!-- Dialog for Sales Details -->
+
     <Dialog v-model:visible="dialogVisible" header="Sales Details" :modal="true" :closable="true" style="width: 50vw">
       <template v-if="selectedSalesDetail">
         <h3>Customer Name: {{ selectedSalesDetail.customerName }}</h3>
@@ -41,7 +41,7 @@
         <Button label="Print" @click="openPrintSizeDialog"/>
       </template>
     </Dialog>
-    <!-- Dialog for Print Size Selection -->
+
     <Dialog v-model:visible="printSizeDialogVisible" header="Select Paper Size" :modal="true" :closable="true"
             style="width: 30vw">
       <div>
@@ -66,7 +66,7 @@ import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Dialog from 'primevue/dialog';
 import Select from 'primevue/select';
-import html2pdf from 'html2pdf.js'; // Import html2pdf.js
+import html2pdf from 'html2pdf.js';
 import Mustache from 'mustache';
 
 const salesDetails = ref([]);
@@ -74,8 +74,8 @@ const dialogVisible = ref(false);
 const printSizeDialogVisible = ref(false);
 const selectedSalesDetail = ref(null);
 const grandTotal = ref(0);
-const selectedPaperSize = ref(null); // Holds the selected paper size
-// Dropdown for paper sizes
+const selectedPaperSize = ref(null);
+
 const paperSizes = ref([
   {label: 'A4', value: 'a4'},
   {label: 'A5', value: 'a5'},
@@ -134,21 +134,18 @@ const generatePdf = async (salesDetail) => {
     if (response.data.success === 'true') {
       let htmlTemplate = response.data.result.template;
 
-      // Now map salesDetail.items instead of salesDetail.details
-      let itemsArray = Array.isArray(salesDetail.items) ? salesDetail.items : [];
-
       // Log salesDetail to debug
       console.log('Sales Detail:', salesDetail);
 
       let templateData = {
-        customerName: salesDetail.customerName || 'N/A',
-        grandTotal: salesDetail.total || 0,
-        details: itemsArray.map(item => ({
-          productName: item.productName || 'N/A',
-          rate: item.rate || 0,
-          quantity: item.quantity || 0,
-          discount: item.discount || 0,
-          total: (item.rate - item.discount) * item.quantity || 0
+        customerName: salesDetail.customerName,
+        grandTotal: salesDetail.total,
+        details: salesDetail.items.map(item => ({
+          productName: item.productName,
+          rate: item.rate,
+          quantity: item.quantity,
+          discount: item.discount,
+          total: (item.rate - item.discount) * item.quantity
         }))
       };
 
@@ -161,9 +158,9 @@ const generatePdf = async (salesDetail) => {
       const opt = {
         margin: [2, 2],
         filename: `sales-detail-${salesDetail.id}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait' }
+        image: {type: 'jpeg', quality: 0.98},
+        html2canvas: {scale: 2},
+        jsPDF: {unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait'}
       };
       html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
         pdf.autoPrint();
@@ -179,13 +176,8 @@ const generatePdf = async (salesDetail) => {
   }
 };
 
-
-
 onMounted(fetchSalesData);
 </script>
-
-
-
 
 <style scoped>
 .table-container {
