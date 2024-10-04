@@ -22,6 +22,8 @@ const AlignmentTestOne = () => import ('../views/AlignmentTestOne.vue')
 const Pdf = () => import ('../views/Pdf.vue')
 const Html2Pdf = () => import ('../views/Html2pdf.vue')
 const Html2PdfTest = () => import ('../views/Html2pdfTest.vue')
+const Html2PdfNepali = () => import ('../views/Html2pdfNepali.vue')
+const Html2pdfDatabase = () => import ('../views/Html2pdfDatabase.vue')
 
 
 const router = createRouter({
@@ -127,6 +129,15 @@ const router = createRouter({
             path: '/html2pdfTest',
             name: Html2PdfTest,
             component: Html2PdfTest
+        },
+        {
+            path: '/html2pdfNepali',
+            name: Html2PdfNepali,
+            component: Html2PdfNepali
+        },{
+            path: '/Html2pdfDatabase',
+            name: Html2pdfDatabase,
+            component: Html2pdfDatabase
         },
     ],
 })

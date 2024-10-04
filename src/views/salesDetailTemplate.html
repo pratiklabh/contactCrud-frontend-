@@ -1,0 +1,27 @@
+<div>
+    <h2>Sales Detail</h2>
+    <p><strong>Customer Name: {{customerName}}</strong></p>
+    <table style="width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9rem">
+        <thead>
+        <tr>
+            <th style="border: 1px solid #000;">Product Name</th>
+            <th style="border: 1px solid #000;">Rate</th>
+            <th style="border: 1px solid #000;">Quantity</th>
+            <th style="border: 1px solid #000;">Discount</th>
+            <th style="border: 1px solid #000;">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#details}}
+        <tr>
+            <td style="border: 1px solid #000;">{{productName}}</td>
+            <td style="border: 1px solid #000;">{{rate}}</td>
+            <td style="border: 1px solid #000;">{{quantity}}</td>
+            <td style="border: 1px solid #000;">{{discount}}</td>
+            <td style="border: 1px solid #000;">{{total}}</td>
+        </tr>
+        {{/details}}
+        </tbody>
+    </table>
+    <h3>Grand Total: {{grandTotal}}</h3>
+</div>
