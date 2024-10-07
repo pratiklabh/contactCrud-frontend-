@@ -87,7 +87,7 @@ const paperSizes = ref([
 // Fetch sales data from the API
 const fetchSalesData = async () => {
   try {
-    const response = await axios.get('sbs-api/sales');
+    const response = await axios.get('/sbs-api/sales');
     if (response.data.success === 'true') {
       salesDetails.value = response.data.result || [];
     } else {
@@ -127,15 +127,14 @@ const confirmPrint = async () => {
   await generatePdf(selectedSalesDetail.value);
 };
 
-// Fetch HTML template from API and generate PDF
 const generatePdf = async (salesDetail) => {
   try {
-    const response = await axios.get(`/sbs-api/sales/template/1`); //html template from DB
-    if (response.data.success === 'true') {
-      let htmlTemplate = response.data.result.template;
+    const response = await axios.get('/sbs-api/sales/localTemplate');
+    if (response.data.success === "true") {
+      let htmlTemplate = response.data.result.fileContent;
+      // console.log(htmlTemplate)
 
-      console.log('Sales Detail:', salesDetail);
-
+      // Populate the template with data
       let templateData = {
         customerName: salesDetail.customerName,
         grandTotal: salesDetail.total,
@@ -148,20 +147,21 @@ const generatePdf = async (salesDetail) => {
         }))
       };
 
+      // Render the template using Mustache
       let filledHtml = Mustache.render(htmlTemplate, templateData);
-
       const element = document.createElement('div');
       element.innerHTML = filledHtml;
       document.body.appendChild(element);
 
+      // Set up PDF options and generate
       const opt = {
         margin: [2, 2],
         filename: `sales-detail-${salesDetail.id}.pdf`,
-        image: {type: 'jpeg', quality: 0.98},
-        html2canvas: {scale: 2},
-        jsPDF: {unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait'}
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait' }
       };
-      html2pdf().from(element).set(opt).toPdf().get('pdf').then(function (pdf) {
+      html2pdf().from(element).set(opt).toPdf().get('pdf').then(pdf => {
         pdf.autoPrint();
         window.open(pdf.output('bloburl'), '_blank');
       });
