@@ -14,6 +14,21 @@
             <h2> Estimated Invoice </h2>
         </div>
     </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 5.8rem; margin-top: 1rem;">
+        <div style="display: grid; grid-template-columns: 110px auto; row-gap: 0.25rem;">
+            <p><strong>Customer:</strong></p> <p>{{ customerName }}</p>
+            <p><strong>Address:</strong></p> <p>{{ customerAddress }}</p>
+            <p><strong>Phone No.:</strong></p> <p>{{ customerPhone }}</p>
+            <p><strong>Pan No.:</strong></p> <p>{{ customerPan }}</p>
+            <p><strong>Payment Mode:</strong></p> <p>{{ paymentMode }}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.25rem;">
+            <p><strong>Invoice No:</strong></p> <p>{{ invoiceNo }}</p>
+            <p><strong>Transaction Date:</strong></p> <p>{{ transactionDate }}</p>
+            <p><strong>Invoice Date:</strong></p> <p>{{ invoiceDate }}</p>
+            <p><strong>Invoice Miti:</strong></p> <p>{{ invoiceMiti }}</p>
+        </div>
+    </div>
 
 
 </div>
