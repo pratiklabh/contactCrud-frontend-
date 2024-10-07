@@ -52,7 +52,49 @@
         </tr>
         {{ /items  }}
 
-
+        <tr>
+            <td rowspan="8" colspan="3" style="border: 1px solid #000; vertical-align: top; padding-left: 10px;">
+                In Words: {{ amountInWords }}
+            </td>
+            <td style="border: 1px solid #000; padding-left: 10px;">SubTotal</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{grandSubtotal}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Discount</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{discount}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Scheme Discount</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{schemeDiscount}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Taxable</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{taxable}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Non-Taxable</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{nonTaxable}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">VAT</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{vat}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Round Off</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding-left: 10px;">0</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">Total</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; font-weight: bold; padding-left: 10px;">{{total}}</td>
+        </tr>
         </tbody>
     </table>
 
