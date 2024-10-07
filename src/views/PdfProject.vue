@@ -60,7 +60,32 @@ const generatePdf = async () => {
 
     // Populate the template with data from the response
     let templateData = {
-
+      customerName: data.customer.name,
+      customerAddress: data.customer.address,
+      customerPhone: data.customer.phoneNo,
+      customerPan: data.customer.panNo,
+      paymentMode: data.paymentMode,
+      invoiceNo: data.invoiceNo,
+      transactionDate: data.createdAt,
+      invoiceDate: data.invoiceDate,
+      invoiceMiti: data.invoiceDate,
+      amountInWords: data.amountInWords,
+      discount: data.amountDetails.discountAmount,
+      vat: data.amountDetails.vatAmount,
+      total: data.amountDetails.totalAmount,
+      grandSubtotal: data.amountDetails.subTotal,
+      schemeDiscount: 100,
+      taxable: 0,
+      nonTaxable: 0,
+      enteredBy: data.createdBy.firstName,
+      printedBy: data.createdBy.firstName,
+      items: data.salesInvoiceDetails.map((item, index) => ({
+        serialNo: index + 1,
+        itemName: item.product.name,
+        qty: item.quantity,
+        rate: item.unitRate,
+        subtotal: item.amountDetails.subTotal
+      })),
     };
 
     // Render the template using Mustache
