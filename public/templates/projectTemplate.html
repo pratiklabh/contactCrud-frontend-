@@ -29,6 +29,31 @@
             <p><strong>Invoice Miti:</strong></p> <p>{{ invoiceMiti }}</p>
         </div>
     </div>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left;">
+        <thead>
+        <tr>
+            <th style="border: 1px solid #000; padding-left: 10px;">S.N</th>
+            <th style="border: 1px solid #000; padding-left: 10px;">HS Code</th>
+            <th style="border: 1px solid #000; padding-left: 10px;">Item</th>
+            <th style="border: 1px solid #000; padding-left: 10px;">Qty</th>
+            <th style="border: 1px solid #000; padding-left: 10px;">Rate</th>
+            <th style="border: 1px solid #000; padding-left: 10px;">Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{ #items }}
+        <tr>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ serialNo }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ hsCode }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ itemName }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ qty }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ rate }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ subtotal }}</td>
+        </tr>
+        {{ /items  }}
 
+
+        </tbody>
+    </table>
 
 </div>
