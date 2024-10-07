@@ -14,21 +14,33 @@
             <h2> Estimated Invoice </h2>
         </div>
     </div>
+
     <div style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 5.8rem; margin-top: 1rem;">
         <div style="display: grid; grid-template-columns: 110px auto; row-gap: 0.25rem;">
-            <p><strong>Customer:</strong></p> <p>{{ customerName }}</p>
-            <p><strong>Address:</strong></p> <p>{{ customerAddress }}</p>
-            <p><strong>Phone No.:</strong></p> <p>{{ customerPhone }}</p>
-            <p><strong>Pan No.:</strong></p> <p>{{ customerPan }}</p>
-            <p><strong>Payment Mode:</strong></p> <p>{{ paymentMode }}</p>
+            <p><strong>Customer:</strong></p>
+            <p>{{ customerName }}</p>
+            <p><strong>Address:</strong></p>
+            <p>{{ customerAddress }}</p>
+            <p><strong>Phone No.:</strong></p>
+            <p>{{ customerPhone }}</p>
+            <p><strong>Pan No.:</strong></p>
+            <p>{{ customerPan }}</p>
+            <p><strong>Payment Mode:</strong></p>
+            <p>{{ paymentMode }}</p>
         </div>
         <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.25rem;">
-            <p><strong>Invoice No:</strong></p> <p>{{ invoiceNo }}</p>
-            <p><strong>Transaction Date:</strong></p> <p>{{ transactionDate }}</p>
-            <p><strong>Invoice Date:</strong></p> <p>{{ invoiceDate }}</p>
-            <p><strong>Invoice Miti:</strong></p> <p>{{ invoiceMiti }}</p>
+            <p><strong>Invoice No:</strong></p>
+            <p>{{ invoiceNo }}</p>
+            <p><strong>Transaction Date:</strong></p>
+            <p>{{ transactionDate }}</p>
+            <p><strong>Invoice Date:</strong></p>
+            <p>{{ invoiceDate }}</p>
+            <p><strong>Invoice Miti:</strong></p>
+            <p>{{ invoiceMiti }}</p>
         </div>
     </div>
+
+
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left;">
         <thead>
         <tr>
@@ -50,7 +62,7 @@
             <td style="border: 1px solid #000; padding-left: 10px;">{{ rate }}</td>
             <td style="border: 1px solid #000; padding-left: 10px;">{{ subtotal }}</td>
         </tr>
-        {{ /items  }}
+        {{ /items   }}
 
         <tr>
             <td rowspan="8" colspan="3" style="border: 1px solid #000; vertical-align: top; padding-left: 10px;">
@@ -58,32 +70,32 @@
             </td>
             <td style="border: 1px solid #000; padding-left: 10px;">SubTotal</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{grandSubtotal}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ grandSubtotal }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Discount</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{discount}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ discount }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Scheme Discount</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{schemeDiscount}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ schemeDiscount }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Taxable</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{taxable}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ taxable }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Non-Taxable</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{nonTaxable}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ nonTaxable }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">VAT</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{vat}}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ vat }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Round Off</td>
@@ -93,9 +105,41 @@
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Total</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; font-weight: bold; padding-left: 10px;">{{total}}</td>
+            <td style="border: 1px solid #000; font-weight: bold; padding-left: 10px;">{{ total }}</td>
         </tr>
         </tbody>
     </table>
+
+
+    <div style="margin-top: 30px;">
+        <p><strong>Remarks:</strong> {{ remarks }}</p>
+    </div>
+
+    <!-- Signatures -->
+    <div style="display: flex; justify-content: space-between; margin-top: 40px;">
+        <div style="text-align: center;">
+            <p>..........................</p>
+            <p>Entered By: {{ enteredBy }}</p>
+        </div>
+        <div style="text-align: center;">
+            <p>..........................</p>
+            <p>Printed By: {{ printedBy }}</p>
+        </div>
+        <div style="text-align: center;">
+            <p>..........................</p>
+            <p>Authorized Signature</p>
+        </div>
+    </div>
+
+
+    <!-- Terms & Conditions -->
+    <div style="margin-top: 20px;">
+        <p><strong>Terms & Conditions:</strong></p>
+        <p> 1. Term one</p>
+        <p> 2. Term two</p>
+        <p> 3. Term three</p>
+        <p> 4. Term one</p>
+
+    </div>
 
 </div>
