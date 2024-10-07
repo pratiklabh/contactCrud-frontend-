@@ -77,8 +77,7 @@ const generatePdf = async () => {
       schemeDiscount: 100,
       taxable: 0,
       nonTaxable: 0,
-      enteredBy: data.createdBy.firstName,
-      printedBy: data.createdBy.firstName,
+      createdBy: data.createdBy.firstName,
       items: data.salesInvoiceDetails.map((item, index) => ({
         serialNo: index + 1,
         itemName: item.product.name,

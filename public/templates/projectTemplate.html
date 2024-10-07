@@ -11,7 +11,7 @@
             <p>Tel: 9000000000</p>
             <p>Pan No: 999999999</p>
             <p>Branch: Head Office (001)</p>
-            <h2> Estimated Invoice </h2>
+            <h2 style="margin-top: 1rem"> Estimated Invoice </h2>
         </div>
     </div>
 
@@ -118,14 +118,17 @@
     <!-- Signatures -->
     <div style="display: flex; justify-content: space-between; margin-top: 40px;">
         <div style="text-align: center;">
+            <p>{{ createdBy }}</p>
             <p>..........................</p>
-            <p>Entered By: {{ enteredBy }}</p>
+            <p>Entered By</p>
         </div>
         <div style="text-align: center;">
+            <p>{{ createdBy }}</p>
             <p>..........................</p>
-            <p>Printed By: {{ printedBy }}</p>
+            <p>Printed By</p>
         </div>
         <div style="text-align: center;">
+            <p>.</p>
             <p>..........................</p>
             <p>Authorized Signature</p>
         </div>
