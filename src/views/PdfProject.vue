@@ -53,42 +53,44 @@ const generatePdf = async () => {
     const response = await axios.get('/templates/projectTemplate.html');
     let htmlTemplate = response.data;
 
-    // Assuming the API call to get the sales invoice data
     const salesResponse = await axios.get('/templates/response');
     console.log(salesResponse);
     const data = salesResponse.data.result;
 
     // Populate the template with data from the response
-    let templateData = {
-      customerName: data.customer.name,
-      customerAddress: data.customer.address,
-      customerPhone: data.customer.phoneNo,
-      customerPan: data.customer.panNo,
-      paymentMode: data.paymentMode,
-      invoiceNo: data.invoiceNo,
-      transactionDate: data.createdAt,
-      invoiceDate: data.invoiceDate,
-      invoiceMiti: data.invoiceDate,
-      amountInWords: data.amountInWords,
-      discount: data.amountDetails.discountAmount,
-      vat: data.amountDetails.vatAmount,
-      total: data.amountDetails.totalAmount,
-      grandSubtotal: data.amountDetails.subTotal,
-      schemeDiscount: 100,
-      taxable: 0,
-      nonTaxable: 0,
-      createdBy: data.createdBy.firstName,
-      items: data.salesInvoiceDetails.map((item, index) => ({
-        serialNo: index + 1,
-        itemName: item.product.name,
-        qty: item.quantity,
-        rate: item.unitRate,
-        subtotal: item.amountDetails.subTotal
-      })),
-    };
-
+    // let templateData = {
+    //   customerName: data.customer.name,
+    //   customerAddress: data.customer.address,
+    //   customerPhone: data.customer.phoneNo,
+    //   customerPan: data.customer.panNo,
+    //   paymentMode: data.paymentMode,
+    //   invoiceNo: data.actualTransactionNo,
+    //   transactionDate: data.createdAt,
+    //   invoiceDate: data.invoiceDate,
+    //   invoiceMiti: data.invoiceDate,
+    //   amountInWords: data.amountInWords,
+    //   discount: data.amountDetails.discountAmount,
+    //   vat: data.amountDetails.vatAmount,
+    //   total: data.amountDetails.totalAmount,
+    //   grandSubtotal: data.amountDetails.subTotal,
+    //   schemeDiscount: 100,
+    //   taxable: 0,
+    //   nonTaxable: 0,
+    //   createdBy: data.createdBy.firstName,
+    //   items: data.salesInvoiceDetails.map((item, index) => ({
+    //     serialNo: index + 1,
+    //     itemName: item.product.name,
+    //     qty: item.quantity,
+    //     rate: item.unitRate,
+    //     hsCode: item.product.code,
+    //     subtotal: item.amountDetails.subTotal,
+    //   })),
+    // };
+    data.salesInvoiceDetails.forEach((item, index) => {
+      item.serialNo = index + 1;
+    });
     // Render the template using Mustache
-      let filledHtml = Mustache.render(htmlTemplate, templateData);
+      let filledHtml = Mustache.render(htmlTemplate, data);
       const element = document.createElement('div');
       element.innerHTML = filledHtml;
       document.body.appendChild(element);

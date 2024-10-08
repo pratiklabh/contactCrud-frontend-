@@ -18,25 +18,25 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 5.8rem; margin-top: 1rem;">
         <div style="display: grid; grid-template-columns: 110px auto; row-gap: 0.25rem;">
             <p><strong>Customer:</strong></p>
-            <p>{{ customerName }}</p>
+            <p>{{ customer.name }}</p>
             <p><strong>Address:</strong></p>
-            <p>{{ customerAddress }}</p>
+            <p>{{ customer.address }}</p>
             <p><strong>Phone No.:</strong></p>
-            <p>{{ customerPhone }}</p>
+            <p>{{ customer.phoneNo }}</p>
             <p><strong>Pan No.:</strong></p>
-            <p>{{ customerPan }}</p>
+            <p>{{ customer.panNo }}</p>
             <p><strong>Payment Mode:</strong></p>
             <p>{{ paymentMode }}</p>
         </div>
         <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.25rem;">
             <p><strong>Invoice No:</strong></p>
-            <p>{{ invoiceNo }}</p>
+            <p>{{ actualTransactionNo }}</p>
             <p><strong>Transaction Date:</strong></p>
-            <p>{{ transactionDate }}</p>
+            <p>{{ createdAt }}</p>
             <p><strong>Invoice Date:</strong></p>
             <p>{{ invoiceDate }}</p>
             <p><strong>Invoice Miti:</strong></p>
-            <p>{{ invoiceMiti }}</p>
+            <p>{{ invoiceDate }}</p>
         </div>
     </div>
 
@@ -53,16 +53,16 @@
         </tr>
         </thead>
         <tbody>
-        {{ #items }}
+        {{#salesInvoiceDetails}}
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">{{ serialNo }}</td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ hsCode }}</td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ itemName }}</td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ qty }}</td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ rate }}</td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ subtotal }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ product.code }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ product.name }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ quantity }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ unitRate }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ amountDetails.subTotal }}</td>
         </tr>
-        {{ /items   }}
+        {{/salesInvoiceDetails}}
 
         <tr>
             <td rowspan="8" colspan="3" style="border: 1px solid #000; vertical-align: top; padding-left: 10px;">
@@ -70,12 +70,12 @@
             </td>
             <td style="border: 1px solid #000; padding-left: 10px;">SubTotal</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ grandSubtotal }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ amountDetails.subTotal }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Discount</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ discount }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ amountDetails.discountAmount }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Scheme Discount</td>
@@ -95,7 +95,7 @@
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">VAT</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">{{ vat }}</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{ amountDetails.vatAmount }}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Round Off</td>
@@ -105,7 +105,7 @@
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Total</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; font-weight: bold; padding-left: 10px;">{{ total }}</td>
+            <td style="border: 1px solid #000; font-weight: bold; padding-left: 10px;">{{ amountDetails.totalAmount }}</td>
         </tr>
         </tbody>
     </table>
@@ -118,12 +118,12 @@
     <!-- Signatures -->
     <div style="display: flex; justify-content: space-between; margin-top: 40px;">
         <div style="text-align: center;">
-            <p>{{ createdBy }}</p>
+            <p>{{ createdBy.firstName }}</p>
             <p>..........................</p>
             <p>Entered By</p>
         </div>
         <div style="text-align: center;">
-            <p>{{ createdBy }}</p>
+            <p>{{ createdBy.firstName }}</p>
             <p>..........................</p>
             <p>Printed By</p>
         </div>
