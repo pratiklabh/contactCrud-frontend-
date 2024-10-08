@@ -6,8 +6,12 @@
             style="width: 30vw">
       <div>
         <p>Select the paper size for the PDF:</p>
-        <Select v-model="selectedPaperSize" :options="paperSizes" optionLabel="label" optionValue="value"
-                placeholder="Select Paper Size"/>
+        <Select v-model="selectedPaperSize" :options="paperSizes" optionLabel="label"
+                optionValue="value" placeholder="Select Paper Size"/>
+
+        <p style="margin-top: 1rem;">Select the font for the PDF:</p>
+        <Select v-model="selectedFont" :options="fonts" optionLabel="label"
+                optionValue="value" placeholder="Select Font" />
 
         <div style="margin-top: 1rem;">
           <Button label="Confirm" @click="confirmPrint"/>
@@ -34,10 +38,16 @@ const paperSizes = ref([
   {label: '80 mm', value: [80, 230]},
   {label: '72 mm', value: [72, 230]},
 ]);
-
+const fonts = ref([
+  { label: 'Times New Roman', value: 'Times New Roman' },
+  { label: 'Arial', value: 'Arial' },
+  { label: 'Georgia', value: 'Georgia' },
+  { label: 'Verdana', value: 'Verdana' },
+]);
 
 const printSizeDialogVisible = ref(false);
 const selectedPaperSize = ref(null);
+const selectedFont = ref(null);
 
 const openPrintSizeDialog = () => {
   printSizeDialogVisible.value = true;
@@ -54,62 +64,38 @@ const generatePdf = async () => {
     let htmlTemplate = response.data;
 
     const salesResponse = await axios.get('/templates/response');
-    console.log(salesResponse);
     const data = salesResponse.data.result;
 
-    // Populate the template with data from the response
-    // let templateData = {
-    //   customerName: data.customer.name,
-    //   customerAddress: data.customer.address,
-    //   customerPhone: data.customer.phoneNo,
-    //   customerPan: data.customer.panNo,
-    //   paymentMode: data.paymentMode,
-    //   invoiceNo: data.actualTransactionNo,
-    //   transactionDate: data.createdAt,
-    //   invoiceDate: data.invoiceDate,
-    //   invoiceMiti: data.invoiceDate,
-    //   amountInWords: data.amountInWords,
-    //   discount: data.amountDetails.discountAmount,
-    //   vat: data.amountDetails.vatAmount,
-    //   total: data.amountDetails.totalAmount,
-    //   grandSubtotal: data.amountDetails.subTotal,
-    //   schemeDiscount: 100,
-    //   taxable: 0,
-    //   nonTaxable: 0,
-    //   createdBy: data.createdBy.firstName,
-    //   items: data.salesInvoiceDetails.map((item, index) => ({
-    //     serialNo: index + 1,
-    //     itemName: item.product.name,
-    //     qty: item.quantity,
-    //     rate: item.unitRate,
-    //     hsCode: item.product.code,
-    //     subtotal: item.amountDetails.subTotal,
-    //   })),
-    // };
     data.salesInvoiceDetails.forEach((item, index) => {
       item.serialNo = index + 1;
     });
-    // Render the template using Mustache
-      let filledHtml = Mustache.render(htmlTemplate, data);
-      const element = document.createElement('div');
-      element.innerHTML = filledHtml;
-      document.body.appendChild(element);
 
-      // Set up PDF options and generate
-      const opt = {
-        margin: [2, 2],
-        filename: `sales-detail.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait' }
-      };
-      html2pdf().from(element).set(opt).toPdf().get('pdf').then(pdf => {
-        pdf.autoPrint();
-        window.open(pdf.output('bloburl'), '_blank');
-      });
+    data.selectedFont = selectedFont.value || 'Arial'; // Default to Arial if no font is selected
 
-      document.body.removeChild(element);
+    let filledHtml = Mustache.render(htmlTemplate, data);
 
+    // Create a new div and set the font style based on the selected font
+    const element = document.createElement('div');
+    element.innerHTML = filledHtml;
+
+    // Append the element to the body
+    document.body.appendChild(element);
+
+    // Set up PDF options and generate
+    const opt = {
+      margin: [2, 2],
+      filename: `sales-detail.pdf`,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: selectedPaperSize.value || 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().from(element).set(opt).toPdf().get('pdf').then(pdf => {
+      pdf.autoPrint();
+      window.open(pdf.output('bloburl'), '_blank');
+    });
+
+    document.body.removeChild(element);
   } catch (error) {
     console.error('Error generating PDF:', error);
   }
