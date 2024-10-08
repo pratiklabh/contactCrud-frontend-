@@ -2,7 +2,7 @@
     <!-- Company Header Section -->
     <div style="display: flex; align-items: center;">
         <div style="left: 20px;">
-            <img src="/images/logo.jpg" alt="Logo" style="width: 100px;"/>
+            <img src="/images/logo.jpg" alt="Logo" style="width: 120px; height: 120px"/>
 
         </div>
         <div style="margin-left:25%;text-align: center">
@@ -10,37 +10,37 @@
             <p>Pulchowk, Lalitpur</p>
             <p>Tel: 9000000000</p>
             <p>Pan No: 999999999</p>
-            <p>Branch: Head Office (001)</p>
+            <p>Branch: {{branch.name}} ({{branch.code}})</p>
             <h2 style="margin-top: 1rem"> Estimated Invoice </h2>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; column-gap: 5.8rem; margin-top: 1rem;">
-        <div style="display: grid; grid-template-columns: 110px auto; row-gap: 0.25rem;">
+    <!-- Customer and Invoice date details -->
+    <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+        <div style="display: grid; grid-template-columns: 85px auto; row-gap: 0.25rem;">
             <p><strong>Customer:</strong></p>
             <p>{{ customer.name }}</p>
-            <p><strong>Address:</strong></p>
-            <p>{{ customer.address }}</p>
             <p><strong>Phone No.:</strong></p>
             <p>{{ customer.phoneNo }}</p>
+            <p><strong>Address:</strong></p>
+            <p>{{ customer.address }}</p>
             <p><strong>Pan No.:</strong></p>
             <p>{{ customer.panNo }}</p>
-            <p><strong>Payment Mode:</strong></p>
-            <p>{{ paymentMode }}</p>
+
         </div>
-        <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.25rem;">
-            <p><strong>Invoice No:</strong></p>
-            <p>{{ actualTransactionNo }}</p>
+        <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.25rem; align-self: flex-end;">
             <p><strong>Transaction Date:</strong></p>
             <p>{{ createdAt }}</p>
+            <p><strong>Payment Mode:</strong></p>
+            <p>{{ paymentMode }}</p>
+            <p><strong>Invoice No:</strong></p>
+            <p>{{ actualTransactionNo }}</p>
             <p><strong>Invoice Date:</strong></p>
-            <p>{{ invoiceDate }}</p>
-            <p><strong>Invoice Miti:</strong></p>
             <p>{{ invoiceDate }}</p>
         </div>
     </div>
 
-
+    <!-- Product details -->
     <table style="width: 100%; border-collapse: collapse; margin-top: 20px; text-align: left;">
         <thead>
         <tr>
@@ -64,6 +64,25 @@
         </tr>
         {{/salesInvoiceDetails}}
 
+        <!-- Two empty rows -->
+        <tr>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+            <td style="border: 1px solid #000; height: 18px;"></td>
+        </tr>
+
+        <!-- Bill Amount details -->
         <tr>
             <td rowspan="8" colspan="3" style="border: 1px solid #000; vertical-align: top; padding-left: 10px;">
                 In Words: {{ amountInWords }}
@@ -100,7 +119,7 @@
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Round Off</td>
             <td style="border: 1px solid #000;"></td>
-            <td style="border: 1px solid #000; padding-left: 10px;">0</td>
+            <td style="border: 1px solid #000; padding-left: 10px;">{{roundOff}}</td>
         </tr>
         <tr>
             <td style="border: 1px solid #000; padding-left: 10px;">Total</td>
@@ -115,7 +134,7 @@
         <p><strong>Remarks:</strong> {{ remarks }}</p>
     </div>
 
-    <!-- Signatures -->
+    <!-- Name And Signatures -->
     <div style="display: flex; justify-content: space-between; margin-top: 40px;">
         <div style="text-align: center;">
             <p>{{ createdBy.firstName }}</p>
@@ -141,7 +160,7 @@
         <p> 1. Term one</p>
         <p> 2. Term two</p>
         <p> 3. Term three</p>
-        <p> 4. Term one</p>
+        <p> 4. Term four</p>
 
     </div>
 
