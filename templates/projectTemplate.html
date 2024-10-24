@@ -1,0 +1,160 @@
+<div style="width: 90%; font-family: '{{selectedFont}}', serif; font-size: 0.9rem; padding: 25px; margin: 0 auto;">
+    <!-- Company Header Section -->
+    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+        <div style="left: 20px;">
+            <img src="/images/logo.jpg" alt="Logo" style="width: 120px; height: 120px;" />
+        </div>
+        <div style="margin-left: 15%; text-align: center; padding: 20px;">
+            <h3 style="margin-bottom: 10px;">Synergy Tech Soft</h3>
+            <p style="margin-bottom: 5px;">Pulchowk, Lalitpur</p>
+            <p style="margin-bottom: 5px;">Tel: 9000000000</p>
+            <p style="margin-bottom: 5px;">Pan No: 999999999</p>
+            <p style="margin-bottom: 15px;">Branch: {{branch.name}} ({{branch.code}})</p>
+            <h2 style="margin-top: 1.5rem;">Estimated Invoice</h2>
+        </div>
+
+    </div>
+
+    <!-- Customer and Invoice date details -->
+    <div style="display: flex; justify-content: space-between; margin-top: 1.2rem;">
+        <div style="display: grid; grid-template-columns: 85px auto; row-gap: 0.5rem;">
+            <p><strong>Customer:</strong></p>
+            <p>{{ customer.name }}</p>
+            <p><strong>Phone No.:</strong></p>
+            <p>{{ customer.phoneNo }}</p>
+            <p><strong>Address:</strong></p>
+            <p>{{ customer.address }}</p>
+            <p><strong>Pan No.:</strong></p>
+            <p>{{ customer.panNo }}</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 135px auto; text-align: left; row-gap: 0.5rem; align-self: flex-end;">
+            <p><strong>Transaction Date:</strong></p>
+            <p>{{ createdAt }}</p>
+            <p><strong>Payment Mode:</strong></p>
+            <p>{{ paymentMode }}</p>
+            <p><strong>Invoice No:</strong></p>
+            <p>{{ actualTransactionNo }}</p>
+            <p><strong>Invoice Date:</strong></p>
+            <p>{{ invoiceDate }}</p>
+        </div>
+    </div>
+
+    <!-- Product details -->
+    <table style="width: 100%; border-collapse: collapse; margin-top: 25px; text-align: left;">
+        <thead>
+        <tr>
+            <th style="border: 1px solid #000; padding: 5px;">S.N</th>
+            <th style="border: 1px solid #000; padding: 5px;">HS Code</th>
+            <th style="border: 1px solid #000; padding: 5px;">Item</th>
+            <th style="border: 1px solid #000; padding: 5px;">Qty</th>
+            <th style="border: 1px solid #000; padding: 5px;">Rate</th>
+            <th style="border: 1px solid #000; padding: 5px;">Subtotal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#salesInvoiceDetails}}
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">{{ serialNo }}</td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ product.code }}</td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ product.name }}</td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ quantity }} ({{productUnit.unit.unitAlias}})</td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ unitRate }}</td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ amountDetails.subTotal }}</td>
+        </tr>
+        {{/salesInvoiceDetails}}
+
+        <!-- Two empty rows -->
+        <tr>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+            <td style="border: 1px solid #000; padding: 13px"></td>
+        </tr>
+
+        <!-- Bill Amount details -->
+        <tr>
+            <td rowspan="8" colspan="3" style="border: 1px solid #000; vertical-align: top; padding: 10px;">In Words: {{ amountInWords }}</td>
+            <td style="border: 1px solid #000; padding: 5px;">SubTotal</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ amountDetails.subTotal }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">Discount</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ amountDetails.discountAmount }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">Scheme Discount</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ salesInvoiceDetails.schemeDiscountAmount }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">Taxable</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ taxableAmount }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">Non-Taxable</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ nonTaxableAmount }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">VAT</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{ amountDetails.vatAmount }}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px;">Round Off</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; padding: 5px;">{{roundOff}}</td>
+        </tr>
+        <tr>
+            <td style="border: 1px solid #000; padding: 5px; font-weight: bold;">Total</td>
+            <td style="border: 1px solid #000;"></td>
+            <td style="border: 1px solid #000; font-weight: bold; padding: 5px;">{{ amountDetails.totalAmount }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px;">
+        <p><strong>Remarks:</strong> {{ remarks }}</p>
+    </div>
+
+    <!-- Name And Signatures -->
+    <div style="display: flex; justify-content: space-between; margin-top: 45px;">
+        <div style="text-align: center;">
+            <p>{{ createdBy.firstName }}</p>
+            <p>..........................</p>
+            <p>Entered By</p>
+        </div>
+        <div style="text-align: center;">
+            <p>{{ createdBy.firstName }}</p>
+            <p>..........................</p>
+            <p>Printed By</p>
+        </div>
+        <div style="text-align: center;">
+            <p>.</p>
+            <p>..........................</p>
+            <p>Authorized Signature</p>
+        </div>
+    </div>
+
+    <!-- Terms & Conditions -->
+    <div style="margin-top: 25px;">
+        <p><strong>Terms & Conditions:</strong></p>
+        <p> 1. Term one</p>
+        <p> 2. Term two</p>
+        <p> 3. Term three</p>
+        <p> 4. Term four</p>
+    </div>
+</div>
