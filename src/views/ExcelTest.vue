@@ -16,25 +16,38 @@ const drawDataOnCanvas = (data) => {
 
   console.log('Extracted Data:', data);
 
+  // Set starting position
+  const startX = 50;  // X position for the first column
+  const startY = 100; // Y position for the first row
+  const rowHeight = 100; // Height for each row
+
+  // Draw headers
+  ctx.font = '20px Arial';
+  ctx.fillStyle = 'black';
+  ctx.fillText('Name', startX, startY);
+  ctx.fillText('Code', startX + 200, startY);
+  ctx.fillText('Rate', startX + 400, startY);
+  ctx.fillText('Image', startX + 600, startY);
+
+  // Draw each item
   data.forEach((item, index) => {
+    const yOffset = startY + (index + 1) * rowHeight;
+
     // Draw text: name, code, rate
-    ctx.font = '20px Arial';
-    ctx.fillStyle = 'black';
-    const yOffset = 100 + (index * 150); // Adjust vertical position for each item
-    ctx.fillText(`Name: ${item.name}`, 50, yOffset);
-    ctx.fillText(`Code: ${item.code}`, 50, yOffset + 30);
-    ctx.fillText(`Rate: ${item.rate}`, 50, yOffset + 60);
+    ctx.fillText(item.name, startX, yOffset);
+    ctx.fillText(item.code, startX + 200, yOffset); // Align with "Code"
+    ctx.fillText(item.rate, startX + 400, yOffset); // Align with "Rate"
 
     // Load and draw image
     const image = new Image();
     image.src = item.image_path; // from excel column image_path
     image.onload = () => {
-      ctx.drawImage(image, 400, yOffset - 40, 100, 100);
+      ctx.drawImage(image, startX + 600, yOffset - 30, 100, 100); // Adjust Y position for the image
     };
   });
 };
 
-// load the Excel file from the public directory
+// Load the Excel file from the public directory
 const loadExcelFromPublic = () => {
   const fileUrl = '/data.xlsx'; // excel file path in the public folder
   fetch(fileUrl)
@@ -51,7 +64,6 @@ const loadExcelFromPublic = () => {
           image_path: row[3] || '',
           rate: row[4] || ''
         })).filter(row => row.name && row.code && row.image_path && row.rate); // Keep only valid rows
-
 
         // Draw the extracted data on the canvas
         drawDataOnCanvas(extractedData);
