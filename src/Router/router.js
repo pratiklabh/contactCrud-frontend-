@@ -27,6 +27,7 @@ const Html2pdfDatabase = () => import ('../views/Html2pdfDatabase.vue')
 const PdfProject = () => import ('../views/PdfProject.vue')
 const ImageTest = () => import('../views/ImageTest.vue')
 const ExcelTest = () => import('../views/ExcelTest.vue')
+const ExcelTestOne = () => import('../views/ExcelTestOne.vue')
 
 
 const router = createRouter({
@@ -157,6 +158,10 @@ const router = createRouter({
             path: '/excelTest',
             name: ExcelTest,
             component: ExcelTest
+        },{
+            path: '/excelTestOne',
+            name: ExcelTestOne,
+            component: ExcelTestOne
         },
     ],
 })
