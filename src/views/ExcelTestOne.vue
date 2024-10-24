@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
 import * as XLSX from 'xlsx';
 
 const canvas = ref(null);
@@ -76,36 +76,26 @@ onMounted(() => {
   fetch('/AgmFormData.xlsx')
       .then((response) => response.arrayBuffer())
       .then((data) => {
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = XLSX.read(data, {type: 'array'});
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
 
         const headers = jsonData[0];
-        const nameIndex = headers.indexOf('Name');
-        const nepaliNameIndex = headers.indexOf('Nepali Name');
-        const genderIndex = headers.indexOf('Gender');
-        const saccosUnionIndex = headers.indexOf('Saccos Union');
-        const postIndex = headers.indexOf('Post');
-        const emailIndex = headers.indexOf('Email');
-        const districtIndex = headers.indexOf('District');
-        const municipalityIndex = headers.indexOf('Municipality');
-        const wardNoIndex = headers.indexOf('Ward No');
-        const mobileNoIndex = headers.indexOf('Mobile No');
-        const membershipNoIndex = headers.indexOf('Membership No');
 
         allData.value = jsonData.slice(1).map(row => ({
-          name: row[nameIndex] || '',
-          nepali_name: row[nepaliNameIndex] || '',
-          gender: row[genderIndex] || '',
-          saccos_union: row[saccosUnionIndex] || '',
-          post: row[postIndex] || '',
-          email: row[emailIndex] || '',
-          district: row[districtIndex] || '',
-          municipality: row[municipalityIndex] || '',
-          ward_no: row[wardNoIndex] || '',
-          mobile_no: row[mobileNoIndex] || '',
-          membership_no: row[membershipNoIndex] || '',
-        })).filter(row => row.name && row.nepali_name && row.gender && row.saccos_union && row.post && row.email && row.district && row.municipality && row.ward_no && row.mobile_no);
+          name: row[headers.indexOf('Name')] || '',
+          nepali_name: row[headers.indexOf('Nepali Name')] || '',
+          gender: row[headers.indexOf('Gender')] || '',
+          saccos_union: row[headers.indexOf('Saccos Union')] || '',
+          post: row[headers.indexOf('Post')] || '',
+          email: row[headers.indexOf('Email')] || '',
+          district: row[headers.indexOf('District')] || '',
+          municipality: row[headers.indexOf('Municipality')] || '',
+          ward_no: row[headers.indexOf('Ward No')] || '',
+          mobile_no: row[headers.indexOf('Mobile No')] || '',
+          membership_no: row[headers.indexOf('Membership No')] || '',
+        })).filter(row => row.name && row.nepali_name && row.gender && row.saccos_union && row.post &&
+                   row.email && row.district && row.municipality && row.ward_no && row.mobile_no);
         console.log(allData.value);
       })
       .catch((error) => console.error('Error loading the Excel file:', error));
