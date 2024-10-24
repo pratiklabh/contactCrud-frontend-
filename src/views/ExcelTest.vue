@@ -69,12 +69,18 @@ onMounted(() => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        // Extract relevant data from each row (name, code, image_path, rate)
+        const headers = jsonData[0];
+        const nameIndex = headers.indexOf('name');
+        const codeIndex = headers.indexOf('code');
+        const imagePathIndex = headers.indexOf('image_path');
+        const rateIndex = headers.indexOf('rate');
+
+        // Extract relevant data from each row using column indices
         allData.value = jsonData.slice(1).map(row => ({
-          name: row[1] || '',
-          code: row[2] || '',
-          image_path: row[3] || '',
-          rate: row[4] || ''
+          name: row[nameIndex] || '',
+          code: row[codeIndex] || '',
+          image_path: row[imagePathIndex] || '',
+          rate: row[rateIndex] || ''
         })).filter(row => row.name && row.code && row.image_path && row.rate);
       })
       .catch((error) => console.error('Error loading the Excel file:', error));
