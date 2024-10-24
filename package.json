@@ -32,6 +32,7 @@
     "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-router": "^4.4.3",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {

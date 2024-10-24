@@ -26,6 +26,8 @@ const Html2PdfNepali = () => import ('../views/Html2pdfNepali.vue')
 const Html2pdfDatabase = () => import ('../views/Html2pdfDatabase.vue')
 const PdfProject = () => import ('../views/PdfProject.vue')
 const ImageTest = () => import('../views/ImageTest.vue')
+const ExcelTest = () => import('../views/ExcelTest.vue')
+
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -150,6 +152,11 @@ const router = createRouter({
             path: '/imageTest',
             name: ImageTest,
             component: ImageTest
+        },
+        {
+            path: '/excelTest',
+            name: ExcelTest,
+            component: ExcelTest
         },
     ],
 })
