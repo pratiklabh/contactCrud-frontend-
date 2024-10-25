@@ -32,45 +32,37 @@ const drawDataOnCanvas = async (item) => {
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
   try {
-    const staticImage = await loadImage('/static-image.jpg');
+    const staticImage = await loadImage('/background-image.jpg');
     ctx.drawImage(staticImage, 0, 0, canvas.value.width, canvas.value.height);
 
     if (!item) return;
 
     // Load and draw the signature and QR images after the background image
     const sign = await loadImage('/sign.jpg');
-    const qr = await loadImage('/qr.jpg');
+    const qr = await loadImage('/Id_qr.png');
 
-    ctx.font = '18px Arial';
-    ctx.fillStyle = 'black';
+    //opacity = 50% (for positioning only)
+    // ctx.globalAlpha = 0.7;
 
     // Draw the signature and QR images
-    ctx.drawImage(sign, 93, 260, 180, 180);
-    ctx.drawImage(qr, 50, 770, 150, 150);
-    ctx.drawImage(qr, 600, 770, 150, 150);
+    ctx.drawImage(sign, 85, 243, 226, 226);
+    ctx.drawImage(qr, 590, 758, 145, 145);
 
     // Draw text details
-    ctx.fillText(item.membership_no, 200, 745);
-    ctx.fillText('Nepali Name:', 70, 520);
-    ctx.fillText(item.nepali_name, 190, 520);
-    ctx.fillText('Name:', 430, 520);
-    ctx.fillText(item.name, 500, 520);
-    ctx.fillText('Mobile No:', 70, 550);
-    ctx.fillText(item.mobile_no, 190, 550);
-    ctx.fillText('Email:', 430, 550);
-    ctx.fillText(item.email, 500, 550);
-    ctx.fillText('Gender:', 70, 580);
-    ctx.fillText(item.gender, 190, 580);
-    ctx.fillText('Post:', 430, 580);
-    ctx.fillText(item.post, 500, 580);
-    ctx.fillText('Municipality:', 70, 610);
-    ctx.fillText(item.municipality, 190, 610);
-    ctx.fillText('District:', 430, 610);
-    ctx.fillText(item.district, 500, 610);
-    ctx.fillText('Ward No:', 70, 640);
-    ctx.fillText(item.ward_no, 190, 640);
-    ctx.fillText('Saccos Union:', 70, 670);
-    ctx.fillText(item.saccos_union, 190, 670);
+    ctx.font = ' bold 26px  Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+
+    ctx.fillText(item.membership_no, 395, 810);
+    ctx.fillText(item.name, 405, 540);
+
+    let address = item.district + "- " + item.ward_no + ", " + item.municipality;
+    ctx.fillText(address, 405, 620);
+
+    ctx.fillStyle = 'green';
+    ctx.font = 'bold 25px Arial';
+    ctx.fillText(item.saccos_union, 405, 580);
+
   } catch (error) {
     console.error('Error loading images:', error);
   }
@@ -126,10 +118,12 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   width: 800px;
+  margin: 0 auto;
 }
 
 .canvas {
   border: 1px solid black;
+
 }
 
 .input-field {
