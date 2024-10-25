@@ -18,21 +18,38 @@ const canvas = ref(null);
 const allData = ref([]);
 const membershipNo = ref('');
 
-const drawDataOnCanvas = (item) => {
+const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+  });
+};
+
+const drawDataOnCanvas = async (item) => {
   const ctx = canvas.value.getContext('2d');
   ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
 
-  const staticImage = new Image();
-  staticImage.src = '/static-image.jpg';
-
-  staticImage.onload = () => {
+  try {
+    const staticImage = await loadImage('/static-image.jpg');
     ctx.drawImage(staticImage, 0, 0, canvas.value.width, canvas.value.height);
 
     if (!item) return;
 
+    // Load and draw the signature and QR images after the background image
+    const sign = await loadImage('/sign.jpg');
+    const qr = await loadImage('/qr.jpg');
+
     ctx.font = '18px Arial';
     ctx.fillStyle = 'black';
 
+    // Draw the signature and QR images
+    ctx.drawImage(sign, 93, 260, 180, 180);
+    ctx.drawImage(qr, 50, 770, 150, 150);
+    ctx.drawImage(qr, 600, 770, 150, 150);
+
+    // Draw text details
     ctx.fillText(item.membership_no, 200, 745);
     ctx.fillText('Nepali Name:', 70, 520);
     ctx.fillText(item.nepali_name, 190, 520);
@@ -54,7 +71,9 @@ const drawDataOnCanvas = (item) => {
     ctx.fillText(item.ward_no, 190, 640);
     ctx.fillText('Saccos Union:', 70, 670);
     ctx.fillText(item.saccos_union, 190, 670);
-  };
+  } catch (error) {
+    console.error('Error loading images:', error);
+  }
 };
 
 const filterByMembershipNo = () => {
@@ -70,7 +89,6 @@ const filterByMembershipNo = () => {
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height); // Clear the canvas if no match is found
   }
 };
-
 
 onMounted(() => {
   fetch('/AgmFormData.xlsx')
